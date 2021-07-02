@@ -1,0 +1,21 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+span{
+    width: 50px;
+    height: 50px;
+    font-size: 30px;
+    text-align: center;
+    font-weight: bold;
+    border: 1px solid black;
+}
+#board{
+    display: flex;
+    flex-wrap: wrap;
+    width: calc(8*50px);
+}
+span:nth-child(2n+1){
+    background-color: #1E6EC7;
+}
