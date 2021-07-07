@@ -56,6 +56,69 @@ class Knight {
     }
 }
 
+class Bishop {
+    constructor(square, colour) {
+        this.square = square;
+        this.colour = colour;
+        this.onBoard = true;
+        if (colour == "white") {
+            document.getElementById(square).innerHTML = "&#9815;";
+        } else {
+            document.getElementById(square).innerHTML = "&#9821;";
+        }
+    }
+
+    getSquare() {
+        return this.square;
+    }
+
+    destroy() {
+        this.onBoard = false;
+    }
+}
+
+class Rook {
+    constructor(square, colour) {
+        this.square = square;
+        this.colour = colour;
+        this.hasMoved = false;
+        this.onBoard = true;
+        if (colour == "white") {
+            document.getElementById(square).innerHTML = "&#9814;";
+        } else {
+            document.getElementById(square).innerHTML = "&#9820;";
+        }
+    }
+}
+
+class Queen {
+    constructor(square, colour) {
+        this.square = square;
+        this.colour = colour;
+        this.onBoard = true;
+        if (colour == "white") {
+            document.getElementById(square).innerHTML = "&#9813;";
+        } else {
+            document.getElementById(square).innerHTML = "&#9819;";
+        }
+    }
+}
+
+class King {
+    constructor(square, colour) {
+        this.square = square;
+        this.colour = colour;
+        this.hasMoved = false;
+        this.inCheck = false;
+        this.onBoard = true;
+        if (colour == "white") {
+            document.getElementById(square).innerHTML = "&#9812;";
+        } else {
+            document.getElementById(square).innerHTML = "&#9818;";
+        }
+    }
+}
+
 function convertSquare(square) {
     return (square.charCodeAt(0)-64, parseInt(square.slice(1)));
 }
@@ -81,6 +144,27 @@ function initialisePawns() {
     }
 }
 
+function initialisePieces() {
+    for (i=1;i<3;i++) {
+        rank = Math.pow(i,3).toString();
+        rooks.push(+new Rook("A"+rank, colours[i-1]));
+        knights.push(+new Knight("B"+rank, colours[i-1]));
+        bishops.push(+new Bishop("C"+rank, colours[i-1]));
+        queens.push(+new Queen("D"+rank, colours[i-1]));
+        kings.push(+new King("E"+rank, colours[i-1]));
+        bishops.push(+new Bishop("F"+rank, colours[i-1]));
+        knights.push(+new Knight("G"+rank, colours[i-1]));
+        rooks.push(+new Rook("H"+rank, colours[i-1]));
+    }
+}
+
 initialiseBoard();
+colours = ["white","black"];
 pawns = [];
+knights = [];
+bishops = [];
+rooks = [];
+queens = [];
+kings = [];
 initialisePawns();
+initialisePieces();
