@@ -22,9 +22,15 @@ class Pawn {
         return this.moved;
     }
 
-    // move(square) {
-
-    // }
+    move(square) {
+        document.getElementById(this.square).innerHTML=this.square;
+        this.square = square;
+        if (this.colour == "white") {
+            document.getElementById(square).innerHTML = "&#9817;";
+        } else {
+            document.getElementById(square).innerHTML = "&#9823;";
+        }
+    }
 
     hasMoved(bool) {
         this.moved = bool;
@@ -137,34 +143,31 @@ function initialiseBoard() {
 
 function initialisePawns() {
     for (i=1;i<9;i++) {
-        pawns.push(+new Pawn(String.fromCharCode(i+64)+"2", false, "white"));
+        pieces.push(new Pawn(String.fromCharCode(i+64)+"2", false, "white"));
     }
     for (j=1;j<9;j++) {
-        pawns.push(+new Pawn(String.fromCharCode(j+64)+"7", false, "black"));
+        pieces.push(new Pawn(String.fromCharCode(j+64)+"7", false, "black"));
     }
 }
 
 function initialisePieces() {
     for (i=1;i<3;i++) {
         rank = Math.pow(i,3).toString();
-        rooks.push(+new Rook("A"+rank, colours[i-1]));
-        knights.push(+new Knight("B"+rank, colours[i-1]));
-        bishops.push(+new Bishop("C"+rank, colours[i-1]));
-        queens.push(+new Queen("D"+rank, colours[i-1]));
-        kings.push(+new King("E"+rank, colours[i-1]));
-        bishops.push(+new Bishop("F"+rank, colours[i-1]));
-        knights.push(+new Knight("G"+rank, colours[i-1]));
-        rooks.push(+new Rook("H"+rank, colours[i-1]));
+        pieces.push(new Rook("A"+rank, colours[i-1]));
+        pieces.push(new Knight("B"+rank, colours[i-1]));
+        pieces.push(new Bishop("C"+rank, colours[i-1]));
+        pieces.push(new Queen("D"+rank, colours[i-1]));
+        pieces.push(new King("E"+rank, colours[i-1]));
+        pieces.push(new Bishop("F"+rank, colours[i-1]));
+        pieces.push(new Knight("G"+rank, colours[i-1]));
+        pieces.push(new Rook("H"+rank, colours[i-1]));
     }
 }
 
 initialiseBoard();
 colours = ["white","black"];
-pawns = [];
-knights = [];
-bishops = [];
-rooks = [];
-queens = [];
-kings = [];
+pieces = [];
+turn = 0;
 initialisePawns();
 initialisePieces();
+pieces[4].move("E4");
