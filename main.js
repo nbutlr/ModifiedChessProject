@@ -73,6 +73,9 @@ class Knight {
                     legal.push(String.fromCharCode(this.square[0].charCodeAt()+moves[0][i])+(parseInt(this.square[1])+moves[1][i]).toString())
                 } else {
                     console.log("Square taken");
+                    if (pieces[pieces.map(function(e) { return e.square; }).indexOf(String.fromCharCode(this.square[0].charCodeAt()+moves[0][i])+(parseInt(this.square[1])+moves[1][i]).toString())].colour!=this.colour) {
+                        legal.push(String.fromCharCode(this.square[0].charCodeAt()+moves[0][i])+(parseInt(this.square[1])+moves[1][i]).toString())
+                    }
                 }
             } catch (error) {
                 console.log("Square not found");
@@ -103,35 +106,8 @@ class Bishop {
     }
 
     checkLegalMoves() {
-        let legal=[];
-        i=0;
-        while (this.square[0].charCodeAt(0)-64-i > 0 && this.square[1]-i > 0) {
-            try {
-                console.log(String.fromCharCode(this.square[0].charCodeAt()-i)+(parseInt(this.square[1])-i).toString())
-                if(document.getElementById(String.fromCharCode(this.square[0].charCodeAt()-i)+(parseInt(this.square[1])-i).toString()).innerHTML == "") {
-                    legal.push(String.fromCharCode(this.square[0].charCodeAt()-i)+(parseInt(this.square[1])-i).toString())
-                } else {
-                    console.log("Square taken");
-                }
-            } catch (error) {
-                console.log("Square not found");
-            }
-            i++;
-        }
-        i=0;
-        while (this.square[0].charCodeAt(0)-64-i > 0 && this.square[1]+i < 9) {
-            try {
-                console.log(String.fromCharCode(this.square[0].charCodeAt()-i)+(parseInt(this.square[1])+i).toString())
-                if(document.getElementById(String.fromCharCode(this.square[0].charCodeAt()-i)+(parseInt(this.square[1])+i).toString()).innerHTML == "") {
-                    legal.push(String.fromCharCode(this.square[0].charCodeAt()-i)+(parseInt(this.square[1])+i).toString())
-                } else {
-                    console.log("Square taken");
-                }
-            } catch (error) {
-                console.log("Square not found");
-            }
-            i++;
-        }
+        let legal = [];
+        legal = checkDiagonal(this.square, this.colour);
         console.log(legal);
     }
 
@@ -156,6 +132,11 @@ class Rook {
             document.getElementById(square).innerHTML = "&#9820;";
         }
     }
+    checkLegalMoves() {
+        let legal = [];
+        legal = checkPerpendicular(this.square, this.colour);
+        console.log(legal);
+    }
 }
 
 class Queen {
@@ -168,6 +149,12 @@ class Queen {
         } else {
             document.getElementById(square).innerHTML = "&#9819;";
         }
+    }
+    checkLegalMoves() {
+        let legal = [];
+        legal = checkPerpendicular(this.square, this.colour);
+        legal = legal.concat(checkDiagonal(this.square, this.colour));
+        console.log(legal);
     }
 }
 
@@ -237,6 +224,160 @@ function dropDown() {
     document.getElementById("pieceSelect").innerHTML = options;
 }
 
+function checkDiagonal(testSquare, pieceColour) {
+    let legal=[];
+    i=1;
+    while (testSquare[0].charCodeAt(0)-64-i > 0 && testSquare[1]-i > 0) {
+        try {
+            if(document.getElementById(String.fromCharCode(testSquare[0].charCodeAt()-i)+(parseInt(testSquare[1])-i).toString()).innerHTML == "") {
+                legal.push(String.fromCharCode(testSquare[0].charCodeAt()-i)+(parseInt(testSquare[1])-i).toString())
+            } else {
+                console.log("Square taken");
+                if (pieces[pieces.map(function(e) { return e.square; }).indexOf(String.fromCharCode(testSquare[0].charCodeAt()-i)+(parseInt(testSquare[1])-i).toString())].colour!=pieceColour) {
+                    legal.push(String.fromCharCode(testSquare[0].charCodeAt()-i)+(parseInt(testSquare[1])-i).toString())
+                }
+                break;
+            }
+        } catch (error) {
+            console.log("Square not found");
+            break;
+        }
+        i++;
+    }
+    i=1;
+    while (testSquare[0].charCodeAt(0)-64-i > 0 && parseInt(testSquare[1])+i < 9) {
+        try {
+            if(document.getElementById(String.fromCharCode(testSquare[0].charCodeAt()-i)+(parseInt(testSquare[1])+i).toString()).innerHTML == "") {
+                legal.push(String.fromCharCode(testSquare[0].charCodeAt()-i)+(parseInt(testSquare[1])+i).toString())
+            } else {
+                console.log("Square taken");
+                if (pieces[pieces.map(function(e) { return e.square; }).indexOf(String.fromCharCode(testSquare[0].charCodeAt()-i)+(parseInt(testSquare[1])+i).toString())].colour!=pieceColour) {
+                    legal.push(String.fromCharCode(testSquare[0].charCodeAt()-i)+(parseInt(testSquare[1])+i).toString())
+                }
+                break;
+            }
+        } catch (error) {
+            console.log("Square not found");
+            break;
+        }
+        i++;
+    }
+    i=1;
+    while (testSquare[0].charCodeAt(0)-64+i < 9 && parseInt(testSquare[1])+i < 9) {
+        try {
+            if(document.getElementById(String.fromCharCode(testSquare[0].charCodeAt()+i)+(parseInt(testSquare[1])+i).toString()).innerHTML == "") {
+                legal.push(String.fromCharCode(testSquare[0].charCodeAt()+i)+(parseInt(testSquare[1])+i).toString())
+            } else {
+                console.log("Square taken");
+                if (pieces[pieces.map(function(e) { return e.square; }).indexOf(String.fromCharCode(testSquare[0].charCodeAt()+i)+(parseInt(testSquare[1])+i).toString())].colour!=pieceColour) {
+                    legal.push(String.fromCharCode(testSquare[0].charCodeAt()+i)+(parseInt(testSquare[1])+i).toString())
+                }
+                break;
+            }
+        } catch (error) {
+            console.log("Square not found");
+            break;
+        }
+        i++;
+    }
+    i=1;
+    while (testSquare[0].charCodeAt(0)-64+i < 9 && parseInt(testSquare[1])-i > 0) {
+        try {
+            if(document.getElementById(String.fromCharCode(testSquare[0].charCodeAt()+i)+(parseInt(testSquare[1])-i).toString()).innerHTML == "") {
+                legal.push(String.fromCharCode(testSquare[0].charCodeAt()+i)+(parseInt(testSquare[1])-i).toString())
+            } else {
+                console.log("Square taken");
+                if (pieces[pieces.map(function(e) { return e.square; }).indexOf(String.fromCharCode(testSquare[0].charCodeAt()+i)+(parseInt(testSquare[1])-i).toString())].colour!=pieceColour) {
+                    legal.push(String.fromCharCode(testSquare[0].charCodeAt()+i)+(parseInt(testSquare[1])-i).toString())
+                }
+                break;
+            }
+        } catch (error) {
+            console.log("Square not found");
+            break;
+        }
+        i++;
+    }
+    return legal;
+}
+
+function checkPerpendicular(testSquare, pieceColour) {
+    let legal=[];
+    i=1;
+    while (testSquare[0].charCodeAt(0)-64-i > 0) {
+        try {
+            if(document.getElementById(String.fromCharCode(testSquare[0].charCodeAt()-i)+testSquare[1]).innerHTML == "") {
+                legal.push(String.fromCharCode(testSquare[0].charCodeAt()-i)+testSquare[1])
+            } else {
+                console.log("Square taken");
+                if (pieces[pieces.map(function(e) { return e.square; }).indexOf(String.fromCharCode(testSquare[0].charCodeAt()-i)+testSquare[1])].colour!=pieceColour) {
+                    legal.push(String.fromCharCode(testSquare[0].charCodeAt()-i)+testSquare[1])
+                }
+                break;
+            }
+        } catch (error) {
+            console.log("Square not found");
+            break;
+        }
+        i++;
+    }
+    i=1;
+    while (testSquare[0].charCodeAt(0)-64+i < 9) {
+        try {
+            if(document.getElementById(String.fromCharCode(testSquare[0].charCodeAt()+i)+testSquare[1]).innerHTML == "") {
+                legal.push(String.fromCharCode(testSquare[0].charCodeAt()+i)+testSquare[1])
+            } else {
+                console.log("Square taken");
+                if (pieces[pieces.map(function(e) { return e.square; }).indexOf(String.fromCharCode(testSquare[0].charCodeAt()+i)+testSquare[1])].colour!=pieceColour) {
+                    legal.push(String.fromCharCode(testSquare[0].charCodeAt()+i)+testSquare[1])
+                }
+                break;
+            }
+        } catch (error) {
+            console.log("Square not found");
+            break;
+        }
+        i++;
+    }
+    i=1;
+    while (parseInt(testSquare[1])-i > 0) {
+        try {
+            if(document.getElementById(testSquare[0]+(parseInt(testSquare[1])-i).toString()).innerHTML == "") {
+                legal.push(testSquare[0]+(parseInt(testSquare[1])-i).toString())
+            } else {
+                console.log("Square taken");
+                if (pieces[pieces.map(function(e) { return e.square; }).indexOf(testSquare[0]+(parseInt(testSquare[1])-i).toString())].colour!=pieceColour) {
+                    legal.push(testSquare[0]+(parseInt(testSquare[1])-i).toString())
+                }
+                break;
+            }
+        } catch (error) {
+            console.log("Square not found");
+            break;
+        }
+        i++;
+    }
+    i=1;
+    while (parseInt(testSquare[1])+i < 9) {
+        try {
+            if(document.getElementById(testSquare[0]+(parseInt(testSquare[1])+i).toString()).innerHTML == "") {
+                legal.push(testSquare[0]+(parseInt(testSquare[1])+i).toString())
+            } else {
+                console.log("Square taken");
+                if (pieces[pieces.map(function(e) { return e.square; }).indexOf(testSquare[0]+(parseInt(testSquare[1])+i).toString())].colour!=pieceColour) {
+                    legal.push(testSquare[0]+(parseInt(testSquare[1])+i).toString())
+                }
+                break;
+            }
+        } catch (error) {
+            console.log("Square not found");
+            break;
+        }
+        i++;
+    }
+    return legal;
+}
+
 initialiseBoard();
 colours = ["white","black"];
 pieces = [];
@@ -244,5 +385,8 @@ turn = 0;
 initialisePawns();
 initialisePieces();
 dropDown();
-pieces[18].checkLegalMoves();
+pieces.push(new Queen("E4","white"));
+// pieces.push(new Knight("C5","white"));
+pieces[32].checkLegalMoves();
+// pieces[33].checkLegalMoves();
 //pieces[4].checkLegalMoves();
