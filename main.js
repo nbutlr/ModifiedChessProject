@@ -171,6 +171,25 @@ class King {
             document.getElementById(square).innerHTML = "&#9818;";
         }
     }
+    checkLegalMoves() {
+        let legal = [];
+        let moves = [[-1,-1,-1,0,1,1,1,0],[-1,0,1,1,1,0,-1,-1]];
+        for(i=0;i<8;i++) {
+            try {
+                if(document.getElementById(String.fromCharCode(this.square[0].charCodeAt()+moves[0][i])+(parseInt(this.square[1])+moves[1][i]).toString()).innerHTML == "") {
+                    legal.push(String.fromCharCode(this.square[0].charCodeAt()+moves[0][i])+(parseInt(this.square[1])+moves[1][i]).toString())
+                } else {
+                    console.log("Square taken");
+                    if (pieces[pieces.map(function(e) { return e.square; }).indexOf(String.fromCharCode(this.square[0].charCodeAt()+moves[0][i])+(parseInt(this.square[1])+moves[1][i]).toString())].colour!=this.colour) {
+                        legal.push(String.fromCharCode(this.square[0].charCodeAt()+moves[0][i])+(parseInt(this.square[1])+moves[1][i]).toString())
+                    }
+                }
+            } catch (error) {
+                console.log("Square not found");
+            }
+        }
+        console.log(legal);
+    }
 }
 
 function convertSquare(square) {
@@ -385,7 +404,7 @@ turn = 0;
 initialisePawns();
 initialisePieces();
 dropDown();
-pieces.push(new Queen("E4","white"));
+pieces.push(new King("E4","white"));
 // pieces.push(new Knight("C5","white"));
 pieces[32].checkLegalMoves();
 // pieces[33].checkLegalMoves();
