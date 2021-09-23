@@ -2,7 +2,7 @@
 Created by Nathan Butler starting 14/06/21 for my A-level Computer Science project */
 
 class Pawn { 
-    constructor(square, moved, colour) {
+    constructor(square, colour, moved) {
         this.square = square;
         this.moved = moved;
         this.colour = colour;
@@ -24,13 +24,51 @@ class Pawn {
 
     checkLegalMoves() {
         let legal=[];
-        if (this.moved==false && document.getElementById(this.square[0]+(parseInt(this.square[1])+1).toString()).innerHTML == "" && document.getElementById(this.square[0]+(parseInt(this.square[1])+2).toString()).innerHTML == "" ){
-            legal.push(this.square[0]+(parseInt(this.square[1])+2).toString());
-        }
-        if(document.getElementById(this.square[0]+(parseInt(this.square[1])+1).toString()).innerHTML == "") {
-            legal.push(this.square[0]+(parseInt(this.square[1])+1).toString())
+        if (this.colour=="white") {
+            try {
+                if (this.moved==false && document.getElementById(this.square[0]+(parseInt(this.square[1])+1).toString()).innerHTML == "" && document.getElementById(this.square[0]+(parseInt(this.square[1])+2).toString()).innerHTML == "" ){
+                    legal.push(this.square[0]+(parseInt(this.square[1])+2).toString());
+                }
+                if(document.getElementById(this.square[0]+(parseInt(this.square[1])+1).toString()).innerHTML == "") {
+                    legal.push(this.square[0]+(parseInt(this.square[1])+1).toString());
+                }
+                if(document.getElementById(String.fromCharCode(this.square[0].charCodeAt()-1)+(parseInt(this.square[1])+1).toString()).innerHTML != "") {
+                    if (pieces[pieces.map(function(e) { return e.square; }).indexOf(String.fromCharCode(this.square[0].charCodeAt()-1)+(parseInt(this.square[1])+1).toString())].colour!=this.colour) {
+                        legal.push(String.fromCharCode(this.square[0].charCodeAt()-1)+(parseInt(this.square[1])+1).toString());
+                    }
+                }
+                if(document.getElementById(String.fromCharCode(this.square[0].charCodeAt()+1)+(parseInt(this.square[1])+1).toString()).innerHTML != "") {
+                    if (pieces[pieces.map(function(e) { return e.square; }).indexOf(String.fromCharCode(this.square[0].charCodeAt()+1)+(parseInt(this.square[1])+1).toString())].colour!=this.colour) {
+                        legal.push(String.fromCharCode(this.square[0].charCodeAt()+1)+(parseInt(this.square[1])+1).toString());
+                    }
+                }
+            } catch (error) {
+                console.log("Square not found");
+            }
+        } else {
+            try {
+                if (this.moved==false && document.getElementById(this.square[0]+(parseInt(this.square[1])-1).toString()).innerHTML == "" && document.getElementById(this.square[0]+(parseInt(this.square[1])-2).toString()).innerHTML == "" ){
+                    legal.push(this.square[0]+(parseInt(this.square[1])-2).toString());
+                }
+                if(document.getElementById(this.square[0]+(parseInt(this.square[1])-1).toString()).innerHTML == "") {
+                    legal.push(this.square[0]+(parseInt(this.square[1])-1).toString());
+                }
+                if(document.getElementById(String.fromCharCode(this.square[0].charCodeAt()-1)+(parseInt(this.square[1])-1).toString()).innerHTML != "") {
+                    if (pieces[pieces.map(function(e) { return e.square; }).indexOf(String.fromCharCode(this.square[0].charCodeAt()-1)+(parseInt(this.square[1])-1).toString())].colour!=this.colour) {
+                        legal.push(String.fromCharCode(this.square[0].charCodeAt()-1)+(parseInt(this.square[1])-1).toString());
+                    }
+                }
+                if(document.getElementById(String.fromCharCode(this.square[0].charCodeAt()+1)+(parseInt(this.square[1])-1).toString()).innerHTML != "") {
+                    if (pieces[pieces.map(function(e) { return e.square; }).indexOf(String.fromCharCode(this.square[0].charCodeAt()+1)+(parseInt(this.square[1])-1).toString())].colour!=this.colour) {
+                        legal.push(String.fromCharCode(this.square[0].charCodeAt()+1)+(parseInt(this.square[1])-1).toString());
+                    }
+                }
+            } catch (error) {
+                console.log("Square not found");
+            }
         }
         console.log(legal);
+        return legal;
     }
 
     move(square) {
@@ -82,6 +120,7 @@ class Knight {
             }
         }
         console.log(legal);
+        return legal;
     }
 
     getSquare() {
@@ -109,6 +148,7 @@ class Bishop {
         let legal = [];
         legal = checkDiagonal(this.square, this.colour);
         console.log(legal);
+        return legal;
     }
 
     getSquare() {
@@ -136,6 +176,7 @@ class Rook {
         let legal = [];
         legal = checkPerpendicular(this.square, this.colour);
         console.log(legal);
+        return legal;
     }
 }
 
@@ -155,6 +196,7 @@ class Queen {
         legal = checkPerpendicular(this.square, this.colour);
         legal = legal.concat(checkDiagonal(this.square, this.colour));
         console.log(legal);
+        return legal;
     }
 }
 
@@ -189,6 +231,7 @@ class King {
             }
         }
         console.log(legal);
+        return legal;
     }
 }
 
@@ -210,10 +253,10 @@ function initialiseBoard() {
 
 function initialisePawns() {
     for (i=1;i<9;i++) {
-        pieces.push(new Pawn(String.fromCharCode(i+64)+"2", false, "white"));
+        pieces.push(new Pawn(String.fromCharCode(i+64)+"2", "white", false));
     }
     for (j=1;j<9;j++) {
-        pieces.push(new Pawn(String.fromCharCode(j+64)+"7", false, "black"));
+        pieces.push(new Pawn(String.fromCharCode(j+64)+"7", "black", false));
     }
 }
 
@@ -397,15 +440,45 @@ function checkPerpendicular(testSquare, pieceColour) {
     return legal;
 }
 
+function moveDropDown() {
+    options="";
+    selected = document.getElementById("pieceSelect").options[document.getElementById("pieceSelect").selectedIndex].text;
+    let legal = [];
+    legal = pieces[pieces.map(function(e) { return e.square; }).indexOf(selected)].checkLegalMoves();
+    for (i=0;i<legal.length;i++) {
+        options += "<option>"+legal[i]+"</option>";
+    }
+    document.getElementById("moveSelect").innerHTML = options;
+}
+
+function submitMove() {
+    selectedPiece = document.getElementById("pieceSelect").options[document.getElementById("pieceSelect").selectedIndex].text;
+    selectedSquare = document.getElementById("moveSelect").options[document.getElementById("moveSelect").selectedIndex].text;
+    pieces[pieces.map(function(e) { return e.square; }).indexOf(selected)].square=selectedSquare;
+    document.getElementById(selectedSquare).innerHTML=document.getElementById(selectedPiece).innerHTML;
+    document.getElementById(selectedPiece).innerHTML="";
+    try {
+        pieces[pieces.map(function(e) { return e.square; }).indexOf(selectedPiece)].moved = true;
+    } catch (error) {
+    }
+    turn = turn + 1;
+    if (turn % 2 == 0) {
+        document.getElementById("turn").innerHTML="Turn: White";
+    } else {
+        document.getElementById("turn").innerHTML="Turn: Black";
+    }
+    dropDown();
+    moveDropDown();
+}
+
 initialiseBoard();
 colours = ["white","black"];
 pieces = [];
 turn = 0;
 initialisePawns();
 initialisePieces();
+// pieces.push(new Queen("E4","white"));
 dropDown();
-pieces.push(new King("E4","white"));
+moveDropDown();
 // pieces.push(new Knight("C5","white"));
-pieces[32].checkLegalMoves();
-// pieces[33].checkLegalMoves();
-//pieces[4].checkLegalMoves();
+// pieces[32].checkLegalMoves();

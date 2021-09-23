@@ -7,12 +7,12 @@
     <body>
         <h1>Modified Chess</h1>
         <div id="board"></div>
-        <p>Turn: White</p>
+        <p id="turn">Turn: White</p>
         <p>Select piece to move:</p>
-        <select id="pieceSelect">
+        <select id="pieceSelect" onchange="moveDropDown()">
         </select>
         <p>Type square to move to</p>
-        <input id="moveSquare">
+        <select id="moveSelect"></select>
         <input type="submit" onclick="submitMove()">
         <script src="main.js"></script>
     </body>
