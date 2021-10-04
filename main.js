@@ -25,18 +25,25 @@ class Pawn {
     checkLegalMoves() {
         let legal=[];
         if (this.colour=="white") {
+            if (this.moved==false && document.getElementById(this.square[0]+(parseInt(this.square[1])+1).toString()).innerHTML == "" && document.getElementById(this.square[0]+(parseInt(this.square[1])+2).toString()).innerHTML == "" ){
+                legal.push(this.square[0]+(parseInt(this.square[1])+2).toString());
+            }
             try {
-                if (this.moved==false && document.getElementById(this.square[0]+(parseInt(this.square[1])+1).toString()).innerHTML == "" && document.getElementById(this.square[0]+(parseInt(this.square[1])+2).toString()).innerHTML == "" ){
-                    legal.push(this.square[0]+(parseInt(this.square[1])+2).toString());
-                }
                 if(document.getElementById(this.square[0]+(parseInt(this.square[1])+1).toString()).innerHTML == "") {
                     legal.push(this.square[0]+(parseInt(this.square[1])+1).toString());
                 }
+            } catch (error) {
+                console.log("Square not found");
+            }
+            try {
                 if(document.getElementById(String.fromCharCode(this.square[0].charCodeAt()-1)+(parseInt(this.square[1])+1).toString()).innerHTML != "") {
                     if (pieces[pieces.map(function(e) { return e.square; }).indexOf(String.fromCharCode(this.square[0].charCodeAt()-1)+(parseInt(this.square[1])+1).toString())].colour!=this.colour) {
                         legal.push(String.fromCharCode(this.square[0].charCodeAt()-1)+(parseInt(this.square[1])+1).toString());
                     }
                 }
+            } catch (error) {
+                console.log("Square not found");
+            } try {
                 if(document.getElementById(String.fromCharCode(this.square[0].charCodeAt()+1)+(parseInt(this.square[1])+1).toString()).innerHTML != "") {
                     if (pieces[pieces.map(function(e) { return e.square; }).indexOf(String.fromCharCode(this.square[0].charCodeAt()+1)+(parseInt(this.square[1])+1).toString())].colour!=this.colour) {
                         legal.push(String.fromCharCode(this.square[0].charCodeAt()+1)+(parseInt(this.square[1])+1).toString());
@@ -46,18 +53,26 @@ class Pawn {
                 console.log("Square not found");
             }
         } else {
+            if (this.moved==false && document.getElementById(this.square[0]+(parseInt(this.square[1])-1).toString()).innerHTML == "" && document.getElementById(this.square[0]+(parseInt(this.square[1])-2).toString()).innerHTML == "" ){
+                legal.push(this.square[0]+(parseInt(this.square[1])-2).toString());
+            }
             try {
-                if (this.moved==false && document.getElementById(this.square[0]+(parseInt(this.square[1])-1).toString()).innerHTML == "" && document.getElementById(this.square[0]+(parseInt(this.square[1])-2).toString()).innerHTML == "" ){
-                    legal.push(this.square[0]+(parseInt(this.square[1])-2).toString());
-                }
                 if(document.getElementById(this.square[0]+(parseInt(this.square[1])-1).toString()).innerHTML == "") {
                     legal.push(this.square[0]+(parseInt(this.square[1])-1).toString());
                 }
+            } catch (error) {
+                console.log("Square not found");
+            }
+            try {
                 if(document.getElementById(String.fromCharCode(this.square[0].charCodeAt()-1)+(parseInt(this.square[1])-1).toString()).innerHTML != "") {
                     if (pieces[pieces.map(function(e) { return e.square; }).indexOf(String.fromCharCode(this.square[0].charCodeAt()-1)+(parseInt(this.square[1])-1).toString())].colour!=this.colour) {
                         legal.push(String.fromCharCode(this.square[0].charCodeAt()-1)+(parseInt(this.square[1])-1).toString());
                     }
                 }
+            } catch (error) {
+                console.log("Square not found");
+            }
+            try {
                 if(document.getElementById(String.fromCharCode(this.square[0].charCodeAt()+1)+(parseInt(this.square[1])-1).toString()).innerHTML != "") {
                     if (pieces[pieces.map(function(e) { return e.square; }).indexOf(String.fromCharCode(this.square[0].charCodeAt()+1)+(parseInt(this.square[1])-1).toString())].colour!=this.colour) {
                         legal.push(String.fromCharCode(this.square[0].charCodeAt()+1)+(parseInt(this.square[1])-1).toString());
@@ -87,6 +102,7 @@ class Pawn {
 
     destroy() {
         this.onBoard = false;
+        pieces[pieces.map(function(e) { return e.square; }).indexOf(this.square)]="";
     }
 }
 
@@ -454,12 +470,28 @@ function moveDropDown() {
 function submitMove() {
     selectedPiece = document.getElementById("pieceSelect").options[document.getElementById("pieceSelect").selectedIndex].text;
     selectedSquare = document.getElementById("moveSelect").options[document.getElementById("moveSelect").selectedIndex].text;
-    pieces[pieces.map(function(e) { return e.square; }).indexOf(selected)].square=selectedSquare;
-    document.getElementById(selectedSquare).innerHTML=document.getElementById(selectedPiece).innerHTML;
-    document.getElementById(selectedPiece).innerHTML="";
     try {
         pieces[pieces.map(function(e) { return e.square; }).indexOf(selectedPiece)].moved = true;
     } catch (error) {
+    }
+    pieces[pieces.map(function(e) { return e.square; }).indexOf(selectedPiece)].square=selectedSquare;
+    if(document.getElementById(selectedSquare).innerHTML=="") {
+        document.getElementById(selectedSquare).innerHTML=document.getElementById(selectedPiece).innerHTML;
+        document.getElementById(selectedPiece).innerHTML="";
+    } else if (turn % 2 == 0) {
+        for (i=0;i<5;i++) {
+            if(document.getElementById(selectedSquare).innerHTML==piecePoints[i][0]) {
+                document.getElementById("white").innerHTML = parseInt(document.getElementById("white").innerHTML) + piecePoints[i][2];
+                console.log(parseInt(document.getElementById("white").innerHTML) + piecePoints[i][2]);
+            }
+        }
+    } else {
+        for (i=0;i<5;i++) {
+            if(document.getElementById(selectedSquare).innerHTML==piecePoints[i][1]) {
+                document.getElementById("black").innerHTML = parseInt(document.getElementById("black").innerHTML) + piecePoints[i][2];
+                console.log(parseInt(document.getElementById("black").innerHTML) + piecePoints[i][2]);
+            }
+        }
     }
     turn = turn + 1;
     if (turn % 2 == 0) {
@@ -473,6 +505,7 @@ function submitMove() {
 
 initialiseBoard();
 colours = ["white","black"];
+piecePoints=[["&#9817;","&#9823;",1],["&#9816;","&#9822;",3],["&#9815;","&#9821;",3],["&#9814;","&#9820;",5],["&#9813;","&#9819;",9]]
 pieces = [];
 turn = 0;
 initialisePawns();
