@@ -261,7 +261,7 @@ function initialiseBoard() {
         document.getElementById("board").innerHTML += "<div>";
         for (j=1;j<9;j++) {
             file = String.fromCharCode(j+64);
-            document.getElementById("board").innerHTML += "<span id='"+file+i.toString()+"' class='"+file+" "+i.toString()+"'></span>";
+            document.getElementById("board").innerHTML += "<span id='"+file+i.toString()+"' class='board'></span>";
         }
         document.getElementById("board").innerHTML += "</div>";
     }
@@ -474,25 +474,27 @@ function submitMove() {
         pieces[pieces.map(function(e) { return e.square; }).indexOf(selectedPiece)].moved = true;
     } catch (error) {
     }
-    pieces[pieces.map(function(e) { return e.square; }).indexOf(selectedPiece)].square=selectedSquare;
     if(document.getElementById(selectedSquare).innerHTML=="") {
-        document.getElementById(selectedSquare).innerHTML=document.getElementById(selectedPiece).innerHTML;
-        document.getElementById(selectedPiece).innerHTML="";
     } else if (turn % 2 == 0) {
+        pieces[pieces.map(function(e) { return e.square; }).indexOf(selectedSquare)]="";
         for (i=0;i<5;i++) {
-            if(document.getElementById(selectedSquare).innerHTML==piecePoints[i][0]) {
+            if(document.getElementById(selectedSquare).innerHTML.charCodeAt()==piecePoints[i][1]) {
                 document.getElementById("white").innerHTML = parseInt(document.getElementById("white").innerHTML) + piecePoints[i][2];
                 console.log(parseInt(document.getElementById("white").innerHTML) + piecePoints[i][2]);
             }
         }
     } else {
+        pieces[pieces.map(function(e) { return e.square; }).indexOf(selectedSquare)]="";
         for (i=0;i<5;i++) {
-            if(document.getElementById(selectedSquare).innerHTML==piecePoints[i][1]) {
+            if(document.getElementById(selectedSquare).innerHTML.charCodeAt()==piecePoints[i][0]) {
                 document.getElementById("black").innerHTML = parseInt(document.getElementById("black").innerHTML) + piecePoints[i][2];
                 console.log(parseInt(document.getElementById("black").innerHTML) + piecePoints[i][2]);
             }
         }
     }
+    pieces[pieces.map(function(e) { return e.square; }).indexOf(selectedPiece)].square=selectedSquare;
+    document.getElementById(selectedSquare).innerHTML=document.getElementById(selectedPiece).innerHTML;
+    document.getElementById(selectedPiece).innerHTML="";
     turn = turn + 1;
     if (turn % 2 == 0) {
         document.getElementById("turn").innerHTML="Turn: White";
@@ -505,13 +507,10 @@ function submitMove() {
 
 initialiseBoard();
 colours = ["white","black"];
-piecePoints=[["&#9817;","&#9823;",1],["&#9816;","&#9822;",3],["&#9815;","&#9821;",3],["&#9814;","&#9820;",5],["&#9813;","&#9819;",9]]
+piecePoints=[[9817,9823,1],[9816,9822,3],[9815,9821,3],[9814,9820,5],[9813,9819,9]];
 pieces = [];
 turn = 0;
 initialisePawns();
 initialisePieces();
-// pieces.push(new Queen("E4","white"));
 dropDown();
 moveDropDown();
-// pieces.push(new Knight("C5","white"));
-// pieces[32].checkLegalMoves();
