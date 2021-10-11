@@ -261,10 +261,17 @@ function initialiseBoard() {
         document.getElementById("board").innerHTML += "<div>";
         for (j=1;j<9;j++) {
             file = String.fromCharCode(j+64);
-            document.getElementById("board").innerHTML += "<span id='"+file+i.toString()+"' class='board'></span>";
+            document.getElementById("board").innerHTML += "<span id='"+file+i.toString()+"' class='boardSpan'></span>";
         }
+        document.getElementById("board").innerHTML += "<span class='boardLabel'>"+i.toString()+"</span>";
         document.getElementById("board").innerHTML += "</div>";
     }
+    document.getElementById("board").innerHTML += "<div>";
+    for (j=1;j<9;j++) {
+        file = String.fromCharCode(j+64);
+        document.getElementById("board").innerHTML += "<span class='boardLabel'>"+file+"</span>";
+    }
+    document.getElementById("board").innerHTML += "</div>";
 }
 
 function initialisePawns() {
@@ -477,18 +484,16 @@ function submitMove() {
     if(document.getElementById(selectedSquare).innerHTML=="") {
     } else if (turn % 2 == 0) {
         pieces[pieces.map(function(e) { return e.square; }).indexOf(selectedSquare)]="";
-        for (i=0;i<5;i++) {
+        for (i=0;i<piecePoints.length;i++) {
             if(document.getElementById(selectedSquare).innerHTML.charCodeAt()==piecePoints[i][1]) {
                 document.getElementById("white").innerHTML = parseInt(document.getElementById("white").innerHTML) + piecePoints[i][2];
-                console.log(parseInt(document.getElementById("white").innerHTML) + piecePoints[i][2]);
             }
         }
     } else {
         pieces[pieces.map(function(e) { return e.square; }).indexOf(selectedSquare)]="";
-        for (i=0;i<5;i++) {
+        for (i=0;i<piecePoints.length;i++) {
             if(document.getElementById(selectedSquare).innerHTML.charCodeAt()==piecePoints[i][0]) {
                 document.getElementById("black").innerHTML = parseInt(document.getElementById("black").innerHTML) + piecePoints[i][2];
-                console.log(parseInt(document.getElementById("black").innerHTML) + piecePoints[i][2]);
             }
         }
     }
@@ -505,12 +510,54 @@ function submitMove() {
     moveDropDown();
 }
 
+function inCheck() {
+    let checks = [];
+    if(turn % 2 == 0) {
+        kingSquare = pieces[20].square;
+    } else {
+        kingSquare = pieces[28].square;
+    }
+    // PAWNS
+    // if(turn % 2 == 0) {
+    //     selectedSquare = String.fromCharCode(kingSquare[0].charCodeAt()+moves[0][i])+(parseInt(kingSquare[1])+moves[1][i]).toString()
+    // } else {
+        
+    // }
+    // END OF PAWNS
+    // KNIGHTS
+    let moves = [[-2,-1,1,2,2,1,-1,-2],[1,2,2,1,-1,-2,-2,-1]];
+    for(i=0;i<8;i++) {
+        try {
+            selectedSquare = String.fromCharCode(kingSquare[0].charCodeAt()+moves[0][i])+(parseInt(kingSquare[1])+moves[1][i]).toString();
+            if(document.getElementById(selectedSquare).innerHTML == "") {
+            } else {
+                if(turn % 2 == 0) {
+                    if (document.getElementById(selectedSquare).innerHTML.charCodeAt() == 9822) {
+                        checks.push(selectedSquare)
+                    }
+                } else {
+                    if (document.getElementById(selectedSquare).innerHTML.charCodeAt() == 9816) {
+                        checks.push(selectedSquare)
+                    }
+                }
+            }
+        } catch (error) {
+        }
+    }
+    // END OF KNIGHTS
+    console.log("Checks: "+checks);
+    return checks;
+}
+
 initialiseBoard();
 colours = ["white","black"];
-piecePoints=[[9817,9823,1],[9816,9822,3],[9815,9821,3],[9814,9820,5],[9813,9819,9]];
+piecePoints=[[9817,9823,1],[9816,9822,3],[9815,9821,3],[9814,9820,5],[9813,9819,9],[9812,9818,100]];
 pieces = [];
 turn = 0;
 initialisePawns();
 initialisePieces();
+// pieces[32] = new Knight("D3", "black");
+// pieces[33] = new Knight("D6", "white");
+// inCheck();
 dropDown();
 moveDropDown();
