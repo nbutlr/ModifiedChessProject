@@ -466,10 +466,44 @@ function checkPerpendicular(testSquare, pieceColour) {
 function moveDropDown() {
     options="";
     selected = document.getElementById("pieceSelect").options[document.getElementById("pieceSelect").selectedIndex].text;
-    let legal = [];
-    legal = pieces[pieces.map(function(e) { return e.square; }).indexOf(selected)].checkLegalMoves();
-    for (i=0;i<legal.length;i++) {
-        options += "<option>"+legal[i]+"</option>";
+    let legalDropDown = [];
+    legalDropDown = pieces[pieces.map(function(e) { return e.square; }).indexOf(selected)].checkLegalMoves();
+    for (k=0;k<legalDropDown.length;k++) {
+        oldPiece = true
+        if(document.getElementById(legalDropDown[k]).innerHTML=="") {
+            oldPiece = false;
+            document.getElementById(legalDropDown[k]).innerHTML=document.getElementById(selected).innerHTML;
+            document.getElementById(selected).innerHTML="";
+        } else if (turn % 2 == 0) {
+            tempInnerHTML = document.getElementById(legalDropDown[k]).innerHTML="";
+            temp = pieces[pieces.map(function(e) { return e.square; }).indexOf(legalDropDown[k])];
+            location = pieces.map(function(e) { return e.square; }).indexOf(legalDropDown[k]);
+            pieces[pieces.map(function(e) { return e.square; }).indexOf(legalDropDown[k])]="";
+            document.getElementById(legalDropDown[k]).innerHTML=document.getElementById(selected).innerHTML;
+            document.getElementById(selected).innerHTML="";
+        } else {
+            tempInnerHTML = document.getElementById(legalDropDown[k]).innerHTML="";
+            temp = pieces[pieces.map(function(e) { return e.square; }).indexOf(legalDropDown[k])];
+            location = pieces.map(function(e) { return e.square; }).indexOf(legalDropDown[k]);
+            pieces[pieces.map(function(e) { return e.square; }).indexOf(legalDropDown[k])]="";
+            document.getElementById(legalDropDown[k]).innerHTML=document.getElementById(selected).innerHTML;
+            document.getElementById(selected).innerHTML="";
+        }
+        oldSquare = pieces[pieces.map(function(e) { return e.square; }).indexOf(selected)].square;
+        pieces[pieces.map(function(e) { return e.square; }).indexOf(selected)].square = legalDropDown[k];
+        checks = inCheck();
+        if(checks.length == 0) {
+            options += "<option>"+legalDropDown[k]+"</option>";
+        }
+        pieces[pieces.map(function(e) { return e.square; }).indexOf(legalDropDown[k])].square = oldSquare;
+        if (oldPiece) {
+            pieces[location]=temp;
+            document.getElementById(selected).innerHTML=document.getElementById(legalDropDown[k]).innerHTML;
+            document.getElementById(legalDropDown[k]).innerHTML=tempInnerHTML;
+        } else {
+            document.getElementById(selected).innerHTML=document.getElementById(legalDropDown[k]).innerHTML;
+            document.getElementById(legalDropDown[k]).innerHTML="";
+        }
     }
     document.getElementById("moveSelect").innerHTML = options;
 }
@@ -518,11 +552,29 @@ function inCheck() {
         kingSquare = pieces[28].square;
     }
     // PAWNS
-    // if(turn % 2 == 0) {
-    //     selectedSquare = String.fromCharCode(kingSquare[0].charCodeAt()+moves[0][i])+(parseInt(kingSquare[1])+moves[1][i]).toString()
-    // } else {
-        
-    // }
+    if(turn % 2 == 0) {
+        selectedSquare = String.fromCharCode(kingSquare[0].charCodeAt()-1)+(parseInt(kingSquare[1])+1).toString();
+        for(i=0;i<2;i++) {
+            if(document.getElementById(selectedSquare).innerHTML == "") {
+            } else {
+                if (document.getElementById(selectedSquare).innerHTML.charCodeAt() == 9823) {
+                    checks.push(selectedSquare);
+                }
+            }
+            selectedSquare = String.fromCharCode(kingSquare[0].charCodeAt()+1)+(parseInt(kingSquare[1])+1).toString();
+        }
+    } else {
+        selectedSquare = String.fromCharCode(kingSquare[0].charCodeAt()-1)+(parseInt(kingSquare[1])-1).toString();
+        for(i=0;i<2;i++) {
+            if(document.getElementById(selectedSquare).innerHTML == "") {
+            } else {
+                if (document.getElementById(selectedSquare).innerHTML.charCodeAt() == 9817) {
+                    checks.push(selectedSquare);
+                }
+            }
+            selectedSquare = String.fromCharCode(kingSquare[0].charCodeAt()+1)+(parseInt(kingSquare[1])-1).toString();
+        }
+    }
     // END OF PAWNS
     // KNIGHTS
     let moves = [[-2,-1,1,2,2,1,-1,-2],[1,2,2,1,-1,-2,-2,-1]];
@@ -533,11 +585,11 @@ function inCheck() {
             } else {
                 if(turn % 2 == 0) {
                     if (document.getElementById(selectedSquare).innerHTML.charCodeAt() == 9822) {
-                        checks.push(selectedSquare)
+                        checks.push(selectedSquare);
                     }
                 } else {
                     if (document.getElementById(selectedSquare).innerHTML.charCodeAt() == 9816) {
-                        checks.push(selectedSquare)
+                        checks.push(selectedSquare);
                     }
                 }
             }
@@ -545,6 +597,52 @@ function inCheck() {
         }
     }
     // END OF KNIGHTS
+    // BISHOPS
+    takenSquares = checkDiagonal(kingSquare, pieces[pieces.map(function(e) { return e.square; }).indexOf(kingSquare)].colour)
+    for(i=0;i<takenSquares.length;i++) {
+        selectedSquare = takenSquares[i];
+        if(turn % 2 == 0) {
+            if (document.getElementById(selectedSquare).innerHTML.charCodeAt() == 9821) {
+                checks.push(selectedSquare);
+            }
+        } else {
+            if (document.getElementById(selectedSquare).innerHTML.charCodeAt() == 9815) {
+                checks.push(selectedSquare);
+            }
+        }
+    }
+    // END OF BISHOPS
+    // ROOKS
+    takenSquares = checkPerpendicular(kingSquare, pieces[pieces.map(function(e) { return e.square; }).indexOf(kingSquare)].colour)
+    for(i=0;i<takenSquares.length;i++) {
+        selectedSquare = takenSquares[i];
+        if(turn % 2 == 0) {
+            if (document.getElementById(selectedSquare).innerHTML.charCodeAt() == 9820) {
+                checks.push(selectedSquare);
+            }
+        } else {
+            if (document.getElementById(selectedSquare).innerHTML.charCodeAt() == 9814) {
+                checks.push(selectedSquare);
+            }
+        }
+    }
+    // END OF ROOKS
+    // QUEENS
+    takenSquares = checkPerpendicular(kingSquare, pieces[pieces.map(function(e) { return e.square; }).indexOf(kingSquare)].colour)
+    takenSquares = takenSquares.concat(checkDiagonal(kingSquare, pieces[pieces.map(function(e) { return e.square; }).indexOf(kingSquare)].colour))
+    for(i=0;i<takenSquares.length;i++) {
+        selectedSquare = takenSquares[i];
+        if(turn % 2 == 0) {
+            if (document.getElementById(selectedSquare).innerHTML.charCodeAt() == 9819) {
+                checks.push(selectedSquare);
+            }
+        } else {
+            if (document.getElementById(selectedSquare).innerHTML.charCodeAt() == 9813) {
+                checks.push(selectedSquare);
+            }
+        }
+    }
+    // END OF QUEENS
     console.log("Checks: "+checks);
     return checks;
 }
