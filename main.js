@@ -18,10 +18,6 @@ class Pawn {
         return this.square;
     }
     
-    hasMoved() {
-        return this.moved;
-    }
-
     checkLegalMoves() {
         let legal=[];
         if (this.colour=="white") {
@@ -94,10 +90,6 @@ class Pawn {
         } else {
             document.getElementById(square).innerHTML = "&#9823;";
         }
-    }
-
-    hasMoved(bool) {
-        this.moved = bool;
     }
 
     destroy() {
@@ -180,7 +172,7 @@ class Rook {
     constructor(square, colour) {
         this.square = square;
         this.colour = colour;
-        this.hasMoved = false;
+        this.moved = false;
         this.onBoard = true;
         if (colour == "white") {
             document.getElementById(square).innerHTML = "&#9814;";
@@ -220,7 +212,7 @@ class King {
     constructor(square, colour) {
         this.square = square;
         this.colour = colour;
-        this.hasMoved = false;
+        this.moved = false;
         this.inCheck = false;
         this.onBoard = true;
         if (colour == "white") {
@@ -244,6 +236,15 @@ class King {
                 }
             } catch (error) {
                 console.log("Square not found");
+            }
+        }
+        if(this.moved == false) {
+            if(this.square[1]=="1") {
+                if(document.getElementById("A1").innerHTML.charCodeAt() == 9814 && pieces[pieces.map(function(e) { return e.square; }).indexOf("A1")].moved == false) {
+                    if(document.getElementById("B1").innerHTML=="" && document.getElementById("C1").innerHTML == "" && document.getElementById("D1").innerHTML == "") {
+                        legal.push("C1");
+                    }
+                }
             }
         }
         console.log(legal);
@@ -464,8 +465,9 @@ function checkPerpendicular(testSquare, pieceColour) {
 }
 
 function moveDropDown() {
-    options="";
-    selected = document.getElementById("pieceSelect").options[document.getElementById("pieceSelect").selectedIndex].text;
+    let options="";
+    let pieceLocation;
+    let selected = document.getElementById("pieceSelect").options[document.getElementById("pieceSelect").selectedIndex].text;
     let legalDropDown = [];
     legalDropDown = pieces[pieces.map(function(e) { return e.square; }).indexOf(selected)].checkLegalMoves();
     for (k=0;k<legalDropDown.length;k++) {
@@ -475,16 +477,16 @@ function moveDropDown() {
             document.getElementById(legalDropDown[k]).innerHTML=document.getElementById(selected).innerHTML;
             document.getElementById(selected).innerHTML="";
         } else if (turn % 2 == 0) {
-            tempInnerHTML = document.getElementById(legalDropDown[k]).innerHTML="";
+            tempInnerHTML = document.getElementById(legalDropDown[k]).innerHTML;
             temp = pieces[pieces.map(function(e) { return e.square; }).indexOf(legalDropDown[k])];
-            location = pieces.map(function(e) { return e.square; }).indexOf(legalDropDown[k]);
+            pieceLocation = pieces.map(function(e) { return e.square; }).indexOf(legalDropDown[k]);
             pieces[pieces.map(function(e) { return e.square; }).indexOf(legalDropDown[k])]="";
             document.getElementById(legalDropDown[k]).innerHTML=document.getElementById(selected).innerHTML;
             document.getElementById(selected).innerHTML="";
         } else {
-            tempInnerHTML = document.getElementById(legalDropDown[k]).innerHTML="";
+            tempInnerHTML = document.getElementById(legalDropDown[k]).innerHTML;
             temp = pieces[pieces.map(function(e) { return e.square; }).indexOf(legalDropDown[k])];
-            location = pieces.map(function(e) { return e.square; }).indexOf(legalDropDown[k]);
+            pieceLocation = pieces.map(function(e) { return e.square; }).indexOf(legalDropDown[k]);
             pieces[pieces.map(function(e) { return e.square; }).indexOf(legalDropDown[k])]="";
             document.getElementById(legalDropDown[k]).innerHTML=document.getElementById(selected).innerHTML;
             document.getElementById(selected).innerHTML="";
@@ -497,7 +499,9 @@ function moveDropDown() {
         }
         pieces[pieces.map(function(e) { return e.square; }).indexOf(legalDropDown[k])].square = oldSquare;
         if (oldPiece) {
-            pieces[location]=temp;
+            console.log("selected " + selected + " legaldropdownk "+legalDropDown[k])
+            console.log(tempInnerHTML)
+            pieces[pieceLocation]=temp;
             document.getElementById(selected).innerHTML=document.getElementById(legalDropDown[k]).innerHTML;
             document.getElementById(legalDropDown[k]).innerHTML=tempInnerHTML;
         } else {
@@ -511,6 +515,9 @@ function moveDropDown() {
 function submitMove() {
     selectedPiece = document.getElementById("pieceSelect").options[document.getElementById("pieceSelect").selectedIndex].text;
     selectedSquare = document.getElementById("moveSelect").options[document.getElementById("moveSelect").selectedIndex].text;
+    if (document.getElementById(selectedPiece).innerHTML.charCodeAt() == 9812){
+        
+    }
     try {
         pieces[pieces.map(function(e) { return e.square; }).indexOf(selectedPiece)].moved = true;
     } catch (error) {
