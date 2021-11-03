@@ -238,11 +238,80 @@ class King {
                 console.log("Square not found");
             }
         }
+        // Checking if castling is legal - king does not move through check //
         if(this.moved == false) {
             if(this.square[1]=="1") {
                 if(document.getElementById("A1").innerHTML.charCodeAt() == 9814 && pieces[pieces.map(function(e) { return e.square; }).indexOf("A1")].moved == false) {
                     if(document.getElementById("B1").innerHTML=="" && document.getElementById("C1").innerHTML == "" && document.getElementById("D1").innerHTML == "") {
-                        legal.push("C1");
+                        pieces[pieces.map(function(e) { return e.square; }).indexOf("E1")].square="D1";
+                        document.getElementById("D1").innerHTML=document.getElementById("E1").innerHTML;
+                        document.getElementById("E1").innerHTML="";
+                        checks = inCheck();
+                        pieces[pieces.map(function(e) { return e.square; }).indexOf("D1")].square="C1";
+                        document.getElementById("C1").innerHTML=document.getElementById("D1").innerHTML;
+                        document.getElementById("D1").innerHTML="";
+                        checks.concat(inCheck());
+                        pieces[pieces.map(function(e) { return e.square; }).indexOf("C1")].square="E1";
+                        document.getElementById("E1").innerHTML=document.getElementById("C1").innerHTML;
+                        document.getElementById("C1").innerHTML="";
+                        if (checks.length==0) {
+                            legal.push("C1");
+                        }
+                    }
+                }
+                if(document.getElementById("H1").innerHTML.charCodeAt() == 9814 && pieces[pieces.map(function(e) { return e.square; }).indexOf("H1")].moved == false) {
+                    if(document.getElementById("F1").innerHTML=="" && document.getElementById("G1").innerHTML == "") {
+                        pieces[pieces.map(function(e) { return e.square; }).indexOf("E1")].square="F1";
+                        document.getElementById("F1").innerHTML=document.getElementById("E1").innerHTML;
+                        document.getElementById("E1").innerHTML="";
+                        checks = inCheck();
+                        pieces[pieces.map(function(e) { return e.square; }).indexOf("F1")].square="G1";
+                        document.getElementById("G1").innerHTML=document.getElementById("F1").innerHTML;
+                        document.getElementById("F1").innerHTML="";
+                        checks.concat(inCheck());
+                        pieces[pieces.map(function(e) { return e.square; }).indexOf("G1")].square="E1";
+                        document.getElementById("E1").innerHTML=document.getElementById("G1").innerHTML;
+                        document.getElementById("G1").innerHTML="";
+                        if (checks.length==0) {
+                            legal.push("G1");
+                        }
+                    }
+                }
+            } else if (this.square[1]=="8") {
+                if(document.getElementById("A8").innerHTML.charCodeAt() == 9820 && pieces[pieces.map(function(e) { return e.square; }).indexOf("A8")].moved == false) {
+                    if(document.getElementById("B8").innerHTML=="" && document.getElementById("C8").innerHTML == "" && document.getElementById("D8").innerHTML == "") {
+                        pieces[pieces.map(function(e) { return e.square; }).indexOf("E8")].square="D8";
+                        document.getElementById("D8").innerHTML=document.getElementById("E8").innerHTML;
+                        document.getElementById("E8").innerHTML="";
+                        checks = inCheck();
+                        pieces[pieces.map(function(e) { return e.square; }).indexOf("D8")].square="C8";
+                        document.getElementById("C8").innerHTML=document.getElementById("D8").innerHTML;
+                        document.getElementById("D8").innerHTML="";
+                        checks.concat(inCheck());
+                        pieces[pieces.map(function(e) { return e.square; }).indexOf("C8")].square="E8";
+                        document.getElementById("E8").innerHTML=document.getElementById("C8").innerHTML;
+                        document.getElementById("C8").innerHTML="";
+                        if (checks.length==0) {
+                            legal.push("C8");
+                        }
+                    }
+                }
+                if(document.getElementById("H8").innerHTML.charCodeAt() == 9820 && pieces[pieces.map(function(e) { return e.square; }).indexOf("H8")].moved == false) {
+                    if(document.getElementById("F8").innerHTML=="" && document.getElementById("G8").innerHTML == "") {
+                        pieces[pieces.map(function(e) { return e.square; }).indexOf("E8")].square="F8";
+                        document.getElementById("F8").innerHTML=document.getElementById("E8").innerHTML;
+                        document.getElementById("E8").innerHTML="";
+                        checks = inCheck();
+                        pieces[pieces.map(function(e) { return e.square; }).indexOf("F8")].square="G8";
+                        document.getElementById("G8").innerHTML=document.getElementById("F8").innerHTML;
+                        document.getElementById("F8").innerHTML="";
+                        checks.concat(inCheck());
+                        pieces[pieces.map(function(e) { return e.square; }).indexOf("G8")].square="E8";
+                        document.getElementById("E8").innerHTML=document.getElementById("G8").innerHTML;
+                        document.getElementById("G8").innerHTML="";
+                        if (checks.length==0) {
+                            legal.push("G8");
+                        }
                     }
                 }
             }
@@ -515,32 +584,77 @@ function moveDropDown() {
 function submitMove() {
     selectedPiece = document.getElementById("pieceSelect").options[document.getElementById("pieceSelect").selectedIndex].text;
     selectedSquare = document.getElementById("moveSelect").options[document.getElementById("moveSelect").selectedIndex].text;
-    if (document.getElementById(selectedPiece).innerHTML.charCodeAt() == 9812){
-        
+    let flagRegular = true;
+    if (selectedPiece == "E1" && document.getElementById(selectedPiece).innerHTML.charCodeAt() == 9812 && pieces[pieces.map(function(e) { return e.square; }).indexOf(selectedPiece)].moved == false){
+        if (selectedSquare == "C1") {
+            pieces[pieces.map(function(e) { return e.square; }).indexOf("E1")].square="C1";
+            document.getElementById("C1").innerHTML=document.getElementById("E1").innerHTML;
+            document.getElementById("E1").innerHTML="";
+            pieces[pieces.map(function(e) { return e.square; }).indexOf("C1")].moved = true;
+            pieces[pieces.map(function(e) { return e.square; }).indexOf("A1")].square="D1";
+            document.getElementById("D1").innerHTML=document.getElementById("A1").innerHTML;
+            document.getElementById("A1").innerHTML="";
+            pieces[pieces.map(function(e) { return e.square; }).indexOf("D1")].moved = true;
+            flagRegular = false;
+        } else if (selectedSquare == "G1") {
+            pieces[pieces.map(function(e) { return e.square; }).indexOf("E1")].square="G1";
+            document.getElementById("G1").innerHTML=document.getElementById("E1").innerHTML;
+            document.getElementById("E1").innerHTML="";
+            pieces[pieces.map(function(e) { return e.square; }).indexOf("G1")].moved = true;
+            pieces[pieces.map(function(e) { return e.square; }).indexOf("H1")].square="F1";
+            document.getElementById("F1").innerHTML=document.getElementById("H1").innerHTML;
+            document.getElementById("H1").innerHTML="";
+            pieces[pieces.map(function(e) { return e.square; }).indexOf("F1")].moved = true;
+            flagRegular = false;
+        }
+    } else if (selectedPiece == "E8" && document.getElementById(selectedPiece).innerHTML.charCodeAt() == 9818 && pieces[pieces.map(function(e) { return e.square; }).indexOf(selectedPiece)].moved == false){
+        if (selectedSquare == "C8") {
+            pieces[pieces.map(function(e) { return e.square; }).indexOf("E8")].square="C8";
+            document.getElementById("C8").innerHTML=document.getElementById("E8").innerHTML;
+            document.getElementById("E8").innerHTML="";
+            pieces[pieces.map(function(e) { return e.square; }).indexOf("C8")].moved = true;
+            pieces[pieces.map(function(e) { return e.square; }).indexOf("A8")].square="D8";
+            document.getElementById("D8").innerHTML=document.getElementById("A8").innerHTML;
+            document.getElementById("A8").innerHTML="";
+            pieces[pieces.map(function(e) { return e.square; }).indexOf("D8")].moved = true;
+            flagRegular = false;
+        } else if (selectedSquare == "G8") {
+            pieces[pieces.map(function(e) { return e.square; }).indexOf("E8")].square="G8";
+            document.getElementById("G8").innerHTML=document.getElementById("E8").innerHTML;
+            document.getElementById("E8").innerHTML="";
+            pieces[pieces.map(function(e) { return e.square; }).indexOf("G8")].moved = true;
+            pieces[pieces.map(function(e) { return e.square; }).indexOf("H8")].square="F8";
+            document.getElementById("F8").innerHTML=document.getElementById("H8").innerHTML;
+            document.getElementById("H8").innerHTML="";
+            pieces[pieces.map(function(e) { return e.square; }).indexOf("F8")].moved = true;
+            flagRegular = false;
+        }
     }
-    try {
-        pieces[pieces.map(function(e) { return e.square; }).indexOf(selectedPiece)].moved = true;
-    } catch (error) {
-    }
-    if(document.getElementById(selectedSquare).innerHTML=="") {
-    } else if (turn % 2 == 0) {
-        pieces[pieces.map(function(e) { return e.square; }).indexOf(selectedSquare)]="";
-        for (i=0;i<piecePoints.length;i++) {
-            if(document.getElementById(selectedSquare).innerHTML.charCodeAt()==piecePoints[i][1]) {
-                document.getElementById("white").innerHTML = parseInt(document.getElementById("white").innerHTML) + piecePoints[i][2];
+    if (flagRegular) {
+        try {
+            pieces[pieces.map(function(e) { return e.square; }).indexOf(selectedPiece)].moved = true;
+        } catch (error) {
+        }
+        if(document.getElementById(selectedSquare).innerHTML=="") {
+        } else if (turn % 2 == 0) {
+            pieces[pieces.map(function(e) { return e.square; }).indexOf(selectedSquare)]="";
+            for (i=0;i<piecePoints.length;i++) {
+                if(document.getElementById(selectedSquare).innerHTML.charCodeAt()==piecePoints[i][1]) {
+                    document.getElementById("white").innerHTML = parseInt(document.getElementById("white").innerHTML) + piecePoints[i][2];
+                }
+            }
+        } else {
+            pieces[pieces.map(function(e) { return e.square; }).indexOf(selectedSquare)]="";
+            for (i=0;i<piecePoints.length;i++) {
+                if(document.getElementById(selectedSquare).innerHTML.charCodeAt()==piecePoints[i][0]) {
+                    document.getElementById("black").innerHTML = parseInt(document.getElementById("black").innerHTML) + piecePoints[i][2];
+                }
             }
         }
-    } else {
-        pieces[pieces.map(function(e) { return e.square; }).indexOf(selectedSquare)]="";
-        for (i=0;i<piecePoints.length;i++) {
-            if(document.getElementById(selectedSquare).innerHTML.charCodeAt()==piecePoints[i][0]) {
-                document.getElementById("black").innerHTML = parseInt(document.getElementById("black").innerHTML) + piecePoints[i][2];
-            }
-        }
+        pieces[pieces.map(function(e) { return e.square; }).indexOf(selectedPiece)].square=selectedSquare;
+        document.getElementById(selectedSquare).innerHTML=document.getElementById(selectedPiece).innerHTML;
+        document.getElementById(selectedPiece).innerHTML="";
     }
-    pieces[pieces.map(function(e) { return e.square; }).indexOf(selectedPiece)].square=selectedSquare;
-    document.getElementById(selectedSquare).innerHTML=document.getElementById(selectedPiece).innerHTML;
-    document.getElementById(selectedPiece).innerHTML="";
     turn = turn + 1;
     if (turn % 2 == 0) {
         document.getElementById("turn").innerHTML="Turn: White";
