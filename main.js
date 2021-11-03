@@ -20,6 +20,7 @@ class Pawn {
     
     checkLegalMoves() {
         let legal=[];
+        console.log("en passant = "+enPassant);
         if (this.colour=="white") {
             if (this.moved==false && document.getElementById(this.square[0]+(parseInt(this.square[1])+1).toString()).innerHTML == "" && document.getElementById(this.square[0]+(parseInt(this.square[1])+2).toString()).innerHTML == "" ){
                 legal.push(this.square[0]+(parseInt(this.square[1])+2).toString());
@@ -35,6 +36,8 @@ class Pawn {
                 if(document.getElementById(String.fromCharCode(this.square[0].charCodeAt()-1)+(parseInt(this.square[1])+1).toString()).innerHTML != "") {
                     if (pieces[pieces.map(function(e) { return e.square; }).indexOf(String.fromCharCode(this.square[0].charCodeAt()-1)+(parseInt(this.square[1])+1).toString())].colour!=this.colour) {
                         legal.push(String.fromCharCode(this.square[0].charCodeAt()-1)+(parseInt(this.square[1])+1).toString());
+                    } else if (String.fromCharCode(this.square[0].charCodeAt()-1)+(parseInt(this.square[1])+1).toString() == enPassant) {
+                        legal.push(String.fromCharCode(this.square[0].charCodeAt()-1)+(parseInt(this.square[1])+1).toString());
                     }
                 }
             } catch (error) {
@@ -42,6 +45,8 @@ class Pawn {
             } try {
                 if(document.getElementById(String.fromCharCode(this.square[0].charCodeAt()+1)+(parseInt(this.square[1])+1).toString()).innerHTML != "") {
                     if (pieces[pieces.map(function(e) { return e.square; }).indexOf(String.fromCharCode(this.square[0].charCodeAt()+1)+(parseInt(this.square[1])+1).toString())].colour!=this.colour) {
+                        legal.push(String.fromCharCode(this.square[0].charCodeAt()+1)+(parseInt(this.square[1])+1).toString());
+                    } else if (String.fromCharCode(this.square[0].charCodeAt()+1)+(parseInt(this.square[1])+1).toString() == enPassant) {
                         legal.push(String.fromCharCode(this.square[0].charCodeAt()+1)+(parseInt(this.square[1])+1).toString());
                     }
                 }
@@ -63,6 +68,8 @@ class Pawn {
                 if(document.getElementById(String.fromCharCode(this.square[0].charCodeAt()-1)+(parseInt(this.square[1])-1).toString()).innerHTML != "") {
                     if (pieces[pieces.map(function(e) { return e.square; }).indexOf(String.fromCharCode(this.square[0].charCodeAt()-1)+(parseInt(this.square[1])-1).toString())].colour!=this.colour) {
                         legal.push(String.fromCharCode(this.square[0].charCodeAt()-1)+(parseInt(this.square[1])-1).toString());
+                    } else if (String.fromCharCode(this.square[0].charCodeAt()-1)+(parseInt(this.square[1])-1).toString() == enPassant) {
+                        legal.push(String.fromCharCode(this.square[0].charCodeAt()-1)+(parseInt(this.square[1])-1).toString());
                     }
                 }
             } catch (error) {
@@ -71,6 +78,8 @@ class Pawn {
             try {
                 if(document.getElementById(String.fromCharCode(this.square[0].charCodeAt()+1)+(parseInt(this.square[1])-1).toString()).innerHTML != "") {
                     if (pieces[pieces.map(function(e) { return e.square; }).indexOf(String.fromCharCode(this.square[0].charCodeAt()+1)+(parseInt(this.square[1])-1).toString())].colour!=this.colour) {
+                        legal.push(String.fromCharCode(this.square[0].charCodeAt()+1)+(parseInt(this.square[1])-1).toString());
+                    } else if (String.fromCharCode(this.square[0].charCodeAt()+1)+(parseInt(this.square[1])-1).toString() == enPassant) {
                         legal.push(String.fromCharCode(this.square[0].charCodeAt()+1)+(parseInt(this.square[1])-1).toString());
                     }
                 }
@@ -585,6 +594,7 @@ function submitMove() {
     selectedPiece = document.getElementById("pieceSelect").options[document.getElementById("pieceSelect").selectedIndex].text;
     selectedSquare = document.getElementById("moveSelect").options[document.getElementById("moveSelect").selectedIndex].text;
     let flagRegular = true;
+    let flagEnPassant = false;
     if (selectedPiece == "E1" && document.getElementById(selectedPiece).innerHTML.charCodeAt() == 9812 && pieces[pieces.map(function(e) { return e.square; }).indexOf(selectedPiece)].moved == false){
         if (selectedSquare == "C1") {
             pieces[pieces.map(function(e) { return e.square; }).indexOf("E1")].square="C1";
@@ -635,7 +645,18 @@ function submitMove() {
             pieces[pieces.map(function(e) { return e.square; }).indexOf(selectedPiece)].moved = true;
         } catch (error) {
         }
-        if(document.getElementById(selectedSquare).innerHTML=="") {
+        if (document.getElementById(selectedPiece).innerHTML.charCodeAt() == 9817) {
+            if(parseInt(selectedSquare[1])==parseInt(selectedPiece[1])+2) {
+                enPassant = selectedSquare[0]+(parseInt(selectedPiece[1])+1).toString();
+                flagEnPassant = true;
+            }
+        } else if (document.getElementById(selectedPiece).innerHTML.charCodeAt() == 9823) {
+            if(parseInt(selectedSquare[1])==parseInt(selectedPiece[1])-2) {
+                enPassant = selectedSquare[0]+(parseInt(selectedPiece[1])-1).toString();
+                flagEnPassant = true;
+            }
+        }
+        if (document.getElementById(selectedSquare).innerHTML=="") {
         } else if (turn % 2 == 0) {
             pieces[pieces.map(function(e) { return e.square; }).indexOf(selectedSquare)]="";
             for (i=0;i<piecePoints.length;i++) {
@@ -654,6 +675,9 @@ function submitMove() {
         pieces[pieces.map(function(e) { return e.square; }).indexOf(selectedPiece)].square=selectedSquare;
         document.getElementById(selectedSquare).innerHTML=document.getElementById(selectedPiece).innerHTML;
         document.getElementById(selectedPiece).innerHTML="";
+    }
+    if (!flagEnPassant) {
+        enPassant = "";
     }
     turn = turn + 1;
     if (turn % 2 == 0) {
@@ -769,14 +793,12 @@ function inCheck() {
 }
 
 initialiseBoard();
-colours = ["white","black"];
-piecePoints=[[9817,9823,1],[9816,9822,3],[9815,9821,3],[9814,9820,5],[9813,9819,9],[9812,9818,100]];
-pieces = [];
-turn = 0;
+let colours = ["white","black"];
+let piecePoints=[[9817,9823,1],[9816,9822,3],[9815,9821,3],[9814,9820,5],[9813,9819,9],[9812,9818,100]];
+let pieces = [];
+let turn = 0;
+let enPassant = "";
 initialisePawns();
 initialisePieces();
-// pieces[32] = new Knight("D3", "black");
-// pieces[33] = new Knight("D6", "white");
-// inCheck();
 dropDown();
 moveDropDown();
