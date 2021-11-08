@@ -36,9 +36,9 @@ class Pawn {
                 if(document.getElementById(String.fromCharCode(this.square[0].charCodeAt()-1)+(parseInt(this.square[1])+1).toString()).innerHTML != "") {
                     if (pieces[pieces.map(function(e) { return e.square; }).indexOf(String.fromCharCode(this.square[0].charCodeAt()-1)+(parseInt(this.square[1])+1).toString())].colour!=this.colour) {
                         legal.push(String.fromCharCode(this.square[0].charCodeAt()-1)+(parseInt(this.square[1])+1).toString());
-                    } else if (String.fromCharCode(this.square[0].charCodeAt()-1)+(parseInt(this.square[1])+1).toString() == enPassant) {
-                        legal.push(String.fromCharCode(this.square[0].charCodeAt()-1)+(parseInt(this.square[1])+1).toString());
                     }
+                } else if (String.fromCharCode(this.square[0].charCodeAt()-1)+(parseInt(this.square[1])+1).toString() == enPassant) {
+                    legal.push(String.fromCharCode(this.square[0].charCodeAt()-1)+(parseInt(this.square[1])+1).toString());
                 }
             } catch (error) {
                 console.log("Square not found");
@@ -46,9 +46,9 @@ class Pawn {
                 if(document.getElementById(String.fromCharCode(this.square[0].charCodeAt()+1)+(parseInt(this.square[1])+1).toString()).innerHTML != "") {
                     if (pieces[pieces.map(function(e) { return e.square; }).indexOf(String.fromCharCode(this.square[0].charCodeAt()+1)+(parseInt(this.square[1])+1).toString())].colour!=this.colour) {
                         legal.push(String.fromCharCode(this.square[0].charCodeAt()+1)+(parseInt(this.square[1])+1).toString());
-                    } else if (String.fromCharCode(this.square[0].charCodeAt()+1)+(parseInt(this.square[1])+1).toString() == enPassant) {
-                        legal.push(String.fromCharCode(this.square[0].charCodeAt()+1)+(parseInt(this.square[1])+1).toString());
                     }
+                } else if (String.fromCharCode(this.square[0].charCodeAt()+1)+(parseInt(this.square[1])+1).toString() == enPassant) {
+                    legal.push(String.fromCharCode(this.square[0].charCodeAt()+1)+(parseInt(this.square[1])+1).toString());
                 }
             } catch (error) {
                 console.log("Square not found");
@@ -68,9 +68,9 @@ class Pawn {
                 if(document.getElementById(String.fromCharCode(this.square[0].charCodeAt()-1)+(parseInt(this.square[1])-1).toString()).innerHTML != "") {
                     if (pieces[pieces.map(function(e) { return e.square; }).indexOf(String.fromCharCode(this.square[0].charCodeAt()-1)+(parseInt(this.square[1])-1).toString())].colour!=this.colour) {
                         legal.push(String.fromCharCode(this.square[0].charCodeAt()-1)+(parseInt(this.square[1])-1).toString());
-                    } else if (String.fromCharCode(this.square[0].charCodeAt()-1)+(parseInt(this.square[1])-1).toString() == enPassant) {
-                        legal.push(String.fromCharCode(this.square[0].charCodeAt()-1)+(parseInt(this.square[1])-1).toString());
                     }
+                } else if (String.fromCharCode(this.square[0].charCodeAt()-1)+(parseInt(this.square[1])-1).toString() == enPassant) {
+                    legal.push(String.fromCharCode(this.square[0].charCodeAt()-1)+(parseInt(this.square[1])-1).toString());
                 }
             } catch (error) {
                 console.log("Square not found");
@@ -79,9 +79,9 @@ class Pawn {
                 if(document.getElementById(String.fromCharCode(this.square[0].charCodeAt()+1)+(parseInt(this.square[1])-1).toString()).innerHTML != "") {
                     if (pieces[pieces.map(function(e) { return e.square; }).indexOf(String.fromCharCode(this.square[0].charCodeAt()+1)+(parseInt(this.square[1])-1).toString())].colour!=this.colour) {
                         legal.push(String.fromCharCode(this.square[0].charCodeAt()+1)+(parseInt(this.square[1])-1).toString());
-                    } else if (String.fromCharCode(this.square[0].charCodeAt()+1)+(parseInt(this.square[1])-1).toString() == enPassant) {
-                        legal.push(String.fromCharCode(this.square[0].charCodeAt()+1)+(parseInt(this.square[1])-1).toString());
                     }
+                } else if (String.fromCharCode(this.square[0].charCodeAt()+1)+(parseInt(this.square[1])-1).toString() == enPassant) {
+                    legal.push(String.fromCharCode(this.square[0].charCodeAt()+1)+(parseInt(this.square[1])-1).toString());
                 }
             } catch (error) {
                 console.log("Square not found");
@@ -586,6 +586,16 @@ function moveDropDown() {
             document.getElementById(selected).innerHTML=document.getElementById(legalDropDown[k]).innerHTML;
             document.getElementById(legalDropDown[k]).innerHTML="";
         }
+        if(document.getElementById(selected).innerHTML.charCodeAt()==9817 && legalDropDown[k][1]=="8") {
+            document.getElementById("promotionSelect").hidden = false;
+            document.getElementById("promotionText").hidden = false;
+        } else if (document.getElementById(selected).innerHTML.charCodeAt()==9823 && legalDropDown[k][1]=="1") {
+            document.getElementById("promotionSelect").hidden = false;
+            document.getElementById("promotionText").hidden = false;
+        } else {
+            document.getElementById("promotionSelect").hidden = true;
+            document.getElementById("promotionText").hidden = true;
+        }
     }
     document.getElementById("moveSelect").innerHTML = options;
 }
@@ -595,6 +605,12 @@ function submitMove() {
     selectedSquare = document.getElementById("moveSelect").options[document.getElementById("moveSelect").selectedIndex].text;
     let flagRegular = true;
     let flagEnPassant = false;
+    let promotionPiece = "";
+    if(document.getElementById(selectedPiece).innerHTML.charCodeAt()==9817 && selectedSquare[1]=="8") {
+        promotionPiece = document.getElementById("promotionSelect").options[document.getElementById("promotionSelect").selectedIndex].text;
+    } else if (document.getElementById(selectedPiece).innerHTML.charCodeAt()==9823 && selectedSquare[1]=="1") {
+        promotionPiece = document.getElementById("promotionSelect").options[document.getElementById("promotionSelect").selectedIndex].text;
+    }
     if (selectedPiece == "E1" && document.getElementById(selectedPiece).innerHTML.charCodeAt() == 9812 && pieces[pieces.map(function(e) { return e.square; }).indexOf(selectedPiece)].moved == false){
         if (selectedSquare == "C1") {
             pieces[pieces.map(function(e) { return e.square; }).indexOf("E1")].square="C1";
@@ -657,6 +673,17 @@ function submitMove() {
             }
         }
         if (document.getElementById(selectedSquare).innerHTML=="") {
+            if(selectedSquare == enPassant) {
+                if(turn % 2 == 0) {
+                    takenEnPassant = selectedSquare[0]+(parseInt(selectedSquare[1])-1).toString();
+                    document.getElementById("white").innerHTML = parseInt(document.getElementById("white").innerHTML) + 1;
+                } else {
+                    takenEnPassant = selectedSquare[0]+(parseInt(selectedSquare[1])+1).toString();
+                    document.getElementById("white").innerHTML = parseInt(document.getElementById("white").innerHTML) + 1;
+                }
+                pieces[pieces.map(function(e) { return e.square; }).indexOf(takenEnPassant)]="";
+                document.getElementById(takenEnPassant).innerHTML = "";
+            }
         } else if (turn % 2 == 0) {
             pieces[pieces.map(function(e) { return e.square; }).indexOf(selectedSquare)]="";
             for (i=0;i<piecePoints.length;i++) {
@@ -675,6 +702,23 @@ function submitMove() {
         pieces[pieces.map(function(e) { return e.square; }).indexOf(selectedPiece)].square=selectedSquare;
         document.getElementById(selectedSquare).innerHTML=document.getElementById(selectedPiece).innerHTML;
         document.getElementById(selectedPiece).innerHTML="";
+        if (promotionPiece != "") {
+            pieceIndex = pieces.map(function(e) { return e.square; }).indexOf(selectedSquare);
+            if(turn % 2 == 0) {
+                newColour = "white";
+            } else {
+                newColour = "black";
+            }
+            if (promotionPiece == "Knight") {
+                pieces[pieceIndex] = new Knight(selectedSquare, newColour);
+            } else if (promotionPiece == "Bishop") {
+                pieces[pieceIndex] = new Bishop(selectedSquare, newColour);
+            } else if (promotionPiece == "Rook") {
+                pieces[pieceIndex] = new Rook(selectedSquare, newColour);
+            } else if (promotionPiece == "Queen") {
+                pieces[pieceIndex] = new Queen(selectedSquare, newColour);
+            }
+        }
     }
     if (!flagEnPassant) {
         enPassant = "";

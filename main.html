@@ -13,6 +13,13 @@
         </select>
         <p>Select square to move to</p>
         <select id="moveSelect"></select>
+        <p id="promotionText" hidden>Select a piece to promote to</p>
+        <select id="promotionSelect" hidden>
+            <option>Knight</option>
+            <option>Bishop</option>
+            <option>Rook</option>
+            <option>Queen</option>
+        </select>
         <input type="submit" onclick="submitMove()">
         <p>White's Points: <span id="white">0</span></p>
         <p>Black's Points: <span id="black">0</span></p>
