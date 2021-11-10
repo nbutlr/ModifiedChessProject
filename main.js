@@ -744,24 +744,32 @@ function inCheck() {
     if(turn % 2 == 0) {
         selectedSquare = String.fromCharCode(kingSquare[0].charCodeAt()-1)+(parseInt(kingSquare[1])+1).toString();
         for(i=0;i<2;i++) {
-            if(document.getElementById(selectedSquare).innerHTML == "") {
-            } else {
-                if (document.getElementById(selectedSquare).innerHTML.charCodeAt() == 9823) {
-                    checks.push(selectedSquare);
+            try {
+                if(document.getElementById(selectedSquare).innerHTML == "") {
+                } else {
+                    if (document.getElementById(selectedSquare).innerHTML.charCodeAt() == 9823) {
+                        checks.push(selectedSquare);
+                    }
                 }
+                selectedSquare = String.fromCharCode(kingSquare[0].charCodeAt()+1)+(parseInt(kingSquare[1])+1).toString();
+            } catch(error) {
+                console.log("Square not found");
             }
-            selectedSquare = String.fromCharCode(kingSquare[0].charCodeAt()+1)+(parseInt(kingSquare[1])+1).toString();
         }
     } else {
         selectedSquare = String.fromCharCode(kingSquare[0].charCodeAt()-1)+(parseInt(kingSquare[1])-1).toString();
         for(i=0;i<2;i++) {
-            if(document.getElementById(selectedSquare).innerHTML == "") {
-            } else {
-                if (document.getElementById(selectedSquare).innerHTML.charCodeAt() == 9817) {
-                    checks.push(selectedSquare);
+            try {
+                if(document.getElementById(selectedSquare).innerHTML == "") {
+                } else {
+                    if (document.getElementById(selectedSquare).innerHTML.charCodeAt() == 9817) {
+                        checks.push(selectedSquare);
+                    }
                 }
+                selectedSquare = String.fromCharCode(kingSquare[0].charCodeAt()+1)+(parseInt(kingSquare[1])-1).toString();
+            } catch (error) {
+                console.log("Square not found");
             }
-            selectedSquare = String.fromCharCode(kingSquare[0].charCodeAt()+1)+(parseInt(kingSquare[1])-1).toString();
         }
     }
     // END OF PAWNS
