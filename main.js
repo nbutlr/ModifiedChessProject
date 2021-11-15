@@ -340,7 +340,7 @@ function initialiseBoard() {
         document.getElementById("board").innerHTML += "<div>";
         for (j=1;j<9;j++) {
             file = String.fromCharCode(j+64);
-            document.getElementById("board").innerHTML += "<span id='"+file+i.toString()+"' class='boardSpan'></span>";
+            document.getElementById("board").innerHTML += "<span id='"+file+i.toString()+"' class='boardSpan' onclick='clickBoard("+'"'+file+i.toString()+'"'+")'></span>";
         }
         document.getElementById("board").innerHTML += "<span class='boardLabel'>"+i.toString()+"</span>";
         document.getElementById("board").innerHTML += "</div>";
@@ -842,6 +842,20 @@ function inCheck() {
     // END OF QUEENS
     console.log("Checks: "+checks);
     return checks;
+}
+
+function clickBoard(clickedSquare) {
+    for (i=0;i<document.getElementById("pieceSelect").options.length;i++) {
+        if(document.getElementById("pieceSelect").options[i].text == clickedSquare) {
+            document.getElementById("pieceSelect").selectedIndex = i;
+        }
+    }
+    moveDropDown();
+    for(j=0;j<document.getElementById("moveSelect").options.length;j++) {
+        if(document.getElementById("moveSelect").options[j].text == clickedSquare) {
+            document.getElementById("moveSelect").selectedIndex = j;
+        }
+    }
 }
 
 initialiseBoard();
