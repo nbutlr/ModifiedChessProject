@@ -696,6 +696,17 @@ function submitMove() {
     }
     dropDown();
     moveDropDown();
+    checks = inCheck();
+    if (checks.length != 0) {
+        document.getElementById("checkmate").hidden = false;
+        if (turn % 2 == 0) {
+            document.getElementById("checkmate").innerHTML = "White is in check!";
+        } else {
+            document.getElementById("checkmate").innerHTML = "Black is in check!;"
+        }
+    } else {
+        document.getElementById("checkmate").hidden = true;
+    }
     checkmate();
 }
 
@@ -823,10 +834,8 @@ function clickBoard(clickedSquare) {
 
 function checkmate() {
     for (l=0;l<document.getElementById("pieceSelect").options.length;l++) {
-        console.log(selectedPiece = document.getElementById("pieceSelect").options[document.getElementById("pieceSelect").selectedIndex].text)
         document.getElementById("pieceSelect").selectedIndex = l;
         moveDropDown();
-        console.log(document.getElementById("moveSelect").options.length);
         if (document.getElementById("moveSelect").options.length != 0) {
             return;
         }
