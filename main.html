@@ -8,10 +8,10 @@
         <h1>Modified Chess</h1>
         <div id="board"></div>
         <p id="turn">Turn: White</p>
-        <p>Select piece to move:</p>
+        <p id="pieceText">Select piece to move:</p>
         <select id="pieceSelect" onchange="moveDropDown()">
         </select>
-        <p>Select square to move to</p>
+        <p id="moveText">Select square to move to</p>
         <select id="moveSelect"></select>
         <p id="promotionText" hidden>Select a piece to promote to</p>
         <select id="promotionSelect" hidden>
@@ -20,9 +20,10 @@
             <option>Rook</option>
             <option>Queen</option>
         </select>
-        <input type="submit" onclick="submitMove()">
+        <input id="submit" type="submit" onclick="submitMove()">
         <p>White's Points: <span id="white">0</span></p>
         <p>Black's Points: <span id="black">0</span></p>
+        <h1 id="checkmate" hidden></h1>
         <script src="main.js"></script>
     </body>
 </html>

@@ -20,7 +20,6 @@ class Pawn {
     
     checkLegalMoves() {
         let legal=[];
-        console.log("en passant = "+enPassant);
         if (this.colour=="white") {
             if (this.moved==false && document.getElementById(this.square[0]+(parseInt(this.square[1])+1).toString()).innerHTML == "" && document.getElementById(this.square[0]+(parseInt(this.square[1])+2).toString()).innerHTML == "" ){
                 legal.push(this.square[0]+(parseInt(this.square[1])+2).toString());
@@ -30,7 +29,6 @@ class Pawn {
                     legal.push(this.square[0]+(parseInt(this.square[1])+1).toString());
                 }
             } catch (error) {
-                console.log("Square not found");
             }
             try {
                 if(document.getElementById(String.fromCharCode(this.square[0].charCodeAt()-1)+(parseInt(this.square[1])+1).toString()).innerHTML != "") {
@@ -41,7 +39,6 @@ class Pawn {
                     legal.push(String.fromCharCode(this.square[0].charCodeAt()-1)+(parseInt(this.square[1])+1).toString());
                 }
             } catch (error) {
-                console.log("Square not found");
             } try {
                 if(document.getElementById(String.fromCharCode(this.square[0].charCodeAt()+1)+(parseInt(this.square[1])+1).toString()).innerHTML != "") {
                     if (pieces[pieces.map(function(e) { return e.square; }).indexOf(String.fromCharCode(this.square[0].charCodeAt()+1)+(parseInt(this.square[1])+1).toString())].colour!=this.colour) {
@@ -51,7 +48,6 @@ class Pawn {
                     legal.push(String.fromCharCode(this.square[0].charCodeAt()+1)+(parseInt(this.square[1])+1).toString());
                 }
             } catch (error) {
-                console.log("Square not found");
             }
         } else {
             if (this.moved==false && document.getElementById(this.square[0]+(parseInt(this.square[1])-1).toString()).innerHTML == "" && document.getElementById(this.square[0]+(parseInt(this.square[1])-2).toString()).innerHTML == "" ){
@@ -62,7 +58,6 @@ class Pawn {
                     legal.push(this.square[0]+(parseInt(this.square[1])-1).toString());
                 }
             } catch (error) {
-                console.log("Square not found");
             }
             try {
                 if(document.getElementById(String.fromCharCode(this.square[0].charCodeAt()-1)+(parseInt(this.square[1])-1).toString()).innerHTML != "") {
@@ -73,7 +68,6 @@ class Pawn {
                     legal.push(String.fromCharCode(this.square[0].charCodeAt()-1)+(parseInt(this.square[1])-1).toString());
                 }
             } catch (error) {
-                console.log("Square not found");
             }
             try {
                 if(document.getElementById(String.fromCharCode(this.square[0].charCodeAt()+1)+(parseInt(this.square[1])-1).toString()).innerHTML != "") {
@@ -84,10 +78,8 @@ class Pawn {
                     legal.push(String.fromCharCode(this.square[0].charCodeAt()+1)+(parseInt(this.square[1])-1).toString());
                 }
             } catch (error) {
-                console.log("Square not found");
             }
         }
-        console.log(legal);
         return legal;
     }
 
@@ -127,16 +119,13 @@ class Knight {
                 if(document.getElementById(String.fromCharCode(this.square[0].charCodeAt()+moves[0][i])+(parseInt(this.square[1])+moves[1][i]).toString()).innerHTML == "") {
                     legal.push(String.fromCharCode(this.square[0].charCodeAt()+moves[0][i])+(parseInt(this.square[1])+moves[1][i]).toString())
                 } else {
-                    console.log("Square taken");
                     if (pieces[pieces.map(function(e) { return e.square; }).indexOf(String.fromCharCode(this.square[0].charCodeAt()+moves[0][i])+(parseInt(this.square[1])+moves[1][i]).toString())].colour!=this.colour) {
                         legal.push(String.fromCharCode(this.square[0].charCodeAt()+moves[0][i])+(parseInt(this.square[1])+moves[1][i]).toString())
                     }
                 }
             } catch (error) {
-                console.log("Square not found");
             }
         }
-        console.log(legal);
         return legal;
     }
 
@@ -164,7 +153,6 @@ class Bishop {
     checkLegalMoves() {
         let legal = [];
         legal = checkDiagonal(this.square, this.colour);
-        console.log(legal);
         return legal;
     }
 
@@ -192,7 +180,6 @@ class Rook {
     checkLegalMoves() {
         let legal = [];
         legal = checkPerpendicular(this.square, this.colour);
-        console.log(legal);
         return legal;
     }
 }
@@ -212,7 +199,6 @@ class Queen {
         let legal = [];
         legal = checkPerpendicular(this.square, this.colour);
         legal = legal.concat(checkDiagonal(this.square, this.colour));
-        console.log(legal);
         return legal;
     }
 }
@@ -238,13 +224,11 @@ class King {
                 if(document.getElementById(String.fromCharCode(this.square[0].charCodeAt()+moves[0][i])+(parseInt(this.square[1])+moves[1][i]).toString()).innerHTML == "") {
                     legal.push(String.fromCharCode(this.square[0].charCodeAt()+moves[0][i])+(parseInt(this.square[1])+moves[1][i]).toString())
                 } else {
-                    console.log("Square taken");
                     if (pieces[pieces.map(function(e) { return e.square; }).indexOf(String.fromCharCode(this.square[0].charCodeAt()+moves[0][i])+(parseInt(this.square[1])+moves[1][i]).toString())].colour!=this.colour) {
                         legal.push(String.fromCharCode(this.square[0].charCodeAt()+moves[0][i])+(parseInt(this.square[1])+moves[1][i]).toString())
                     }
                 }
             } catch (error) {
-                console.log("Square not found");
             }
         }
         // Checking if castling is legal - king does not move through check //
@@ -325,7 +309,6 @@ class King {
                 }
             }
         }
-        console.log(legal);
         return legal;
     }
 }
@@ -396,14 +379,12 @@ function checkDiagonal(testSquare, pieceColour) {
             if(document.getElementById(String.fromCharCode(testSquare[0].charCodeAt()-i)+(parseInt(testSquare[1])-i).toString()).innerHTML == "") {
                 legal.push(String.fromCharCode(testSquare[0].charCodeAt()-i)+(parseInt(testSquare[1])-i).toString())
             } else {
-                console.log("Square taken");
                 if (pieces[pieces.map(function(e) { return e.square; }).indexOf(String.fromCharCode(testSquare[0].charCodeAt()-i)+(parseInt(testSquare[1])-i).toString())].colour!=pieceColour) {
                     legal.push(String.fromCharCode(testSquare[0].charCodeAt()-i)+(parseInt(testSquare[1])-i).toString())
                 }
                 break;
             }
         } catch (error) {
-            console.log("Square not found");
             break;
         }
         i++;
@@ -414,14 +395,12 @@ function checkDiagonal(testSquare, pieceColour) {
             if(document.getElementById(String.fromCharCode(testSquare[0].charCodeAt()-i)+(parseInt(testSquare[1])+i).toString()).innerHTML == "") {
                 legal.push(String.fromCharCode(testSquare[0].charCodeAt()-i)+(parseInt(testSquare[1])+i).toString())
             } else {
-                console.log("Square taken");
                 if (pieces[pieces.map(function(e) { return e.square; }).indexOf(String.fromCharCode(testSquare[0].charCodeAt()-i)+(parseInt(testSquare[1])+i).toString())].colour!=pieceColour) {
                     legal.push(String.fromCharCode(testSquare[0].charCodeAt()-i)+(parseInt(testSquare[1])+i).toString())
                 }
                 break;
             }
         } catch (error) {
-            console.log("Square not found");
             break;
         }
         i++;
@@ -432,14 +411,12 @@ function checkDiagonal(testSquare, pieceColour) {
             if(document.getElementById(String.fromCharCode(testSquare[0].charCodeAt()+i)+(parseInt(testSquare[1])+i).toString()).innerHTML == "") {
                 legal.push(String.fromCharCode(testSquare[0].charCodeAt()+i)+(parseInt(testSquare[1])+i).toString())
             } else {
-                console.log("Square taken");
                 if (pieces[pieces.map(function(e) { return e.square; }).indexOf(String.fromCharCode(testSquare[0].charCodeAt()+i)+(parseInt(testSquare[1])+i).toString())].colour!=pieceColour) {
                     legal.push(String.fromCharCode(testSquare[0].charCodeAt()+i)+(parseInt(testSquare[1])+i).toString())
                 }
                 break;
             }
         } catch (error) {
-            console.log("Square not found");
             break;
         }
         i++;
@@ -450,14 +427,12 @@ function checkDiagonal(testSquare, pieceColour) {
             if(document.getElementById(String.fromCharCode(testSquare[0].charCodeAt()+i)+(parseInt(testSquare[1])-i).toString()).innerHTML == "") {
                 legal.push(String.fromCharCode(testSquare[0].charCodeAt()+i)+(parseInt(testSquare[1])-i).toString())
             } else {
-                console.log("Square taken");
                 if (pieces[pieces.map(function(e) { return e.square; }).indexOf(String.fromCharCode(testSquare[0].charCodeAt()+i)+(parseInt(testSquare[1])-i).toString())].colour!=pieceColour) {
                     legal.push(String.fromCharCode(testSquare[0].charCodeAt()+i)+(parseInt(testSquare[1])-i).toString())
                 }
                 break;
             }
         } catch (error) {
-            console.log("Square not found");
             break;
         }
         i++;
@@ -473,14 +448,12 @@ function checkPerpendicular(testSquare, pieceColour) {
             if(document.getElementById(String.fromCharCode(testSquare[0].charCodeAt()-i)+testSquare[1]).innerHTML == "") {
                 legal.push(String.fromCharCode(testSquare[0].charCodeAt()-i)+testSquare[1])
             } else {
-                console.log("Square taken");
                 if (pieces[pieces.map(function(e) { return e.square; }).indexOf(String.fromCharCode(testSquare[0].charCodeAt()-i)+testSquare[1])].colour!=pieceColour) {
                     legal.push(String.fromCharCode(testSquare[0].charCodeAt()-i)+testSquare[1])
                 }
                 break;
             }
         } catch (error) {
-            console.log("Square not found");
             break;
         }
         i++;
@@ -491,14 +464,12 @@ function checkPerpendicular(testSquare, pieceColour) {
             if(document.getElementById(String.fromCharCode(testSquare[0].charCodeAt()+i)+testSquare[1]).innerHTML == "") {
                 legal.push(String.fromCharCode(testSquare[0].charCodeAt()+i)+testSquare[1])
             } else {
-                console.log("Square taken");
                 if (pieces[pieces.map(function(e) { return e.square; }).indexOf(String.fromCharCode(testSquare[0].charCodeAt()+i)+testSquare[1])].colour!=pieceColour) {
                     legal.push(String.fromCharCode(testSquare[0].charCodeAt()+i)+testSquare[1])
                 }
                 break;
             }
         } catch (error) {
-            console.log("Square not found");
             break;
         }
         i++;
@@ -509,14 +480,12 @@ function checkPerpendicular(testSquare, pieceColour) {
             if(document.getElementById(testSquare[0]+(parseInt(testSquare[1])-i).toString()).innerHTML == "") {
                 legal.push(testSquare[0]+(parseInt(testSquare[1])-i).toString())
             } else {
-                console.log("Square taken");
                 if (pieces[pieces.map(function(e) { return e.square; }).indexOf(testSquare[0]+(parseInt(testSquare[1])-i).toString())].colour!=pieceColour) {
                     legal.push(testSquare[0]+(parseInt(testSquare[1])-i).toString())
                 }
                 break;
             }
         } catch (error) {
-            console.log("Square not found");
             break;
         }
         i++;
@@ -527,14 +496,12 @@ function checkPerpendicular(testSquare, pieceColour) {
             if(document.getElementById(testSquare[0]+(parseInt(testSquare[1])+i).toString()).innerHTML == "") {
                 legal.push(testSquare[0]+(parseInt(testSquare[1])+i).toString())
             } else {
-                console.log("Square taken");
                 if (pieces[pieces.map(function(e) { return e.square; }).indexOf(testSquare[0]+(parseInt(testSquare[1])+i).toString())].colour!=pieceColour) {
                     legal.push(testSquare[0]+(parseInt(testSquare[1])+i).toString())
                 }
                 break;
             }
         } catch (error) {
-            console.log("Square not found");
             break;
         }
         i++;
@@ -577,8 +544,6 @@ function moveDropDown() {
         }
         pieces[pieces.map(function(e) { return e.square; }).indexOf(legalDropDown[k])].square = oldSquare;
         if (oldPiece) {
-            console.log("selected " + selected + " legaldropdownk "+legalDropDown[k])
-            console.log(tempInnerHTML)
             pieces[pieceLocation]=temp;
             document.getElementById(selected).innerHTML=document.getElementById(legalDropDown[k]).innerHTML;
             document.getElementById(legalDropDown[k]).innerHTML=tempInnerHTML;
@@ -731,6 +696,7 @@ function submitMove() {
     }
     dropDown();
     moveDropDown();
+    checkmate();
 }
 
 function inCheck() {
@@ -753,7 +719,6 @@ function inCheck() {
                 }
                 selectedSquare = String.fromCharCode(kingSquare[0].charCodeAt()+1)+(parseInt(kingSquare[1])+1).toString();
             } catch(error) {
-                console.log("Square not found");
             }
         }
     } else {
@@ -768,7 +733,6 @@ function inCheck() {
                 }
                 selectedSquare = String.fromCharCode(kingSquare[0].charCodeAt()+1)+(parseInt(kingSquare[1])-1).toString();
             } catch (error) {
-                console.log("Square not found");
             }
         }
     }
@@ -840,7 +804,6 @@ function inCheck() {
         }
     }
     // END OF QUEENS
-    console.log("Checks: "+checks);
     return checks;
 }
 
@@ -855,6 +818,32 @@ function clickBoard(clickedSquare) {
         if(document.getElementById("moveSelect").options[j].text == clickedSquare) {
             document.getElementById("moveSelect").selectedIndex = j;
         }
+    }
+}
+
+function checkmate() {
+    for (l=0;l<document.getElementById("pieceSelect").options.length;l++) {
+        console.log(selectedPiece = document.getElementById("pieceSelect").options[document.getElementById("pieceSelect").selectedIndex].text)
+        document.getElementById("pieceSelect").selectedIndex = l;
+        moveDropDown();
+        console.log(document.getElementById("moveSelect").options.length);
+        if (document.getElementById("moveSelect").options.length != 0) {
+            return;
+        }
+    }
+    document.getElementById("pieceText").hidden = true;
+    document.getElementById("pieceSelect").hidden = true;
+    document.getElementById("moveText").hidden = true;
+    document.getElementById("moveSelect").hidden = true;
+    document.getElementById("submit").hidden = true;
+    document.getElementById("checkmate").hidden = false;
+    checks = inCheck();
+    if (checks.length == 0) {
+        document.getElementById("checkmate").innerHTML = "Stalemate: it's a draw."
+    } else if (turn % 2 == 0) {
+        document.getElementById("checkmate").innerHTML = "Black wins by checkmate!";
+    } else {
+        document.getElementById("checkmate").innerHTML = "White wins by checkmate!";
     }
 }
 
