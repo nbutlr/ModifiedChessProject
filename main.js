@@ -879,7 +879,7 @@ function updateColour() {
     colour = document.getElementById("colourSelect").options[document.getElementById("colourSelect").selectedIndex].text;
     elements = document.querySelectorAll('.boardSpan');
     for(i=0;i<elements.length;i++) {
-        elements[i].classList.remove('boardSpanBlue', 'boardSpanRed', 'boardSpanGreen', 'boardSpanGrey', 'boardSpanPurple');
+        elements[i].classList.remove('boardSpanBlue', 'boardSpanRed', 'boardSpanGreen', 'boardSpanGrey', 'boardSpanPurple', 'boardSpanBrown');
         if(colour == "Blue") {
             elements[i].classList.add('boardSpanBlue');
         } else if (colour == "Red") {
@@ -890,6 +890,8 @@ function updateColour() {
             elements[i].classList.add('boardSpanGrey');
         } else if (colour == "Purple") {
             elements[i].classList.add('boardSpanPurple');
+        } else if (colour == "Brown") {
+            elements[i].classList.add('boardSpanBrown');
         }
     }
 }

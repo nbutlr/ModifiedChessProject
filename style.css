@@ -26,7 +26,7 @@
     background-color: #1E6EC7;
 }
 .boardSpanRed:nth-child(2n){
-    background-color: #df4747;
+    background-color: #eb3030;
 }
 .boardSpanGreen:nth-child(2n){
     background-color: #40df4d;
@@ -35,5 +35,8 @@
     background-color: #888888;
 }
 .boardSpanPurple:nth-child(2n){
-    background-color: #c32dd1;
+    background-color: #7e0faa;
+}
+.boardSpanBrown:nth-child(2n){
+    background-color: #611d02;
 }
