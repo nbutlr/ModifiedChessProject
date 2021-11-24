@@ -320,13 +320,11 @@ function convertSquare(square) {
 function initialiseBoard() {
     document.getElementById("board").innerHTML = "";
     for (i=8;i>0;i--) {
-        document.getElementById("board").innerHTML += "<div>";
         for (j=1;j<9;j++) {
             file = String.fromCharCode(j+64);
             document.getElementById("board").innerHTML += "<span id='"+file+i.toString()+"' class='boardSpan' onclick='clickBoard("+'"'+file+i.toString()+'"'+")'></span>";
         }
         document.getElementById("board").innerHTML += "<span class='boardLabel'>"+i.toString()+"</span>";
-        document.getElementById("board").innerHTML += "</div>";
     }
     document.getElementById("board").innerHTML += "<div>";
     for (j=1;j<9;j++) {
@@ -644,7 +642,7 @@ function submitMove() {
                     document.getElementById("white").innerHTML = parseInt(document.getElementById("white").innerHTML) + 1;
                 } else {
                     takenEnPassant = selectedSquare[0]+(parseInt(selectedSquare[1])+1).toString();
-                    document.getElementById("white").innerHTML = parseInt(document.getElementById("white").innerHTML) + 1;
+                    document.getElementById("black").innerHTML = parseInt(document.getElementById("black").innerHTML) + 1;
                 }
                 pieces[pieces.map(function(e) { return e.square; }).indexOf(takenEnPassant)]="";
                 document.getElementById(takenEnPassant).innerHTML = "";
@@ -702,7 +700,7 @@ function submitMove() {
         if (turn % 2 == 0) {
             document.getElementById("checkmate").innerHTML = "White is in check!";
         } else {
-            document.getElementById("checkmate").innerHTML = "Black is in check!;"
+            document.getElementById("checkmate").innerHTML = "Black is in check!";
         }
     } else {
         document.getElementById("checkmate").hidden = true;
@@ -815,6 +813,27 @@ function inCheck() {
         }
     }
     // END OF QUEENS
+    // KINGS (they cannot check but also cannot go within 1 square of each other)
+    moves = [[-1,0,1,1,1,0,-1,-1],[1,1,1,0,-1,-1,-1,0]];
+    for(i=0;i<8;i++) {
+        try {
+            selectedSquare = String.fromCharCode(kingSquare[0].charCodeAt()+moves[0][i])+(parseInt(kingSquare[1])+moves[1][i]).toString();
+            if(document.getElementById(selectedSquare).innerHTML == "") {
+            } else {
+                if(turn % 2 == 0) {
+                    if (document.getElementById(selectedSquare).innerHTML.charCodeAt() == 9818) {
+                        checks.push(selectedSquare);
+                    }
+                } else {
+                    if (document.getElementById(selectedSquare).innerHTML.charCodeAt() == 9812) {
+                        checks.push(selectedSquare);
+                    }
+                }
+            }
+        } catch (error) {
+        }
+    }
+    // END OF KINGS
     return checks;
 }
 
@@ -856,6 +875,25 @@ function checkmate() {
     }
 }
 
+function updateColour() {
+    colour = document.getElementById("colourSelect").options[document.getElementById("colourSelect").selectedIndex].text;
+    elements = document.querySelectorAll('.boardSpan');
+    for(i=0;i<elements.length;i++) {
+        elements[i].classList.remove('boardSpanBlue', 'boardSpanRed', 'boardSpanGreen', 'boardSpanGrey', 'boardSpanPurple');
+        if(colour == "Blue") {
+            elements[i].classList.add('boardSpanBlue');
+        } else if (colour == "Red") {
+            elements[i].classList.add('boardSpanRed');
+        } else if (colour == "Green") {
+            elements[i].classList.add('boardSpanGreen');
+        } else if (colour == "Grey") {
+            elements[i].classList.add('boardSpanGrey');
+        } else if (colour == "Purple") {
+            elements[i].classList.add('boardSpanPurple');
+        }
+    }
+}
+
 initialiseBoard();
 let colours = ["white","black"];
 let piecePoints=[[9817,9823,1],[9816,9822,3],[9815,9821,3],[9814,9820,5],[9813,9819,9],[9812,9818,100]];
@@ -866,3 +904,4 @@ initialisePawns();
 initialisePieces();
 dropDown();
 moveDropDown();
+updateColour();

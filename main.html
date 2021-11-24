@@ -7,11 +7,19 @@
     <body>
         <h1>Modified Chess</h1>
         <div id="board"></div>
+        <p>Select a secondary colour for the chess board:</p>
+        <select id="colourSelect" onchange="updateColour()">
+            <option>Blue</option>
+            <option>Red</option>
+            <option>Green</option>
+            <option>Grey</option>
+            <option>Purple</option>
+        </select>
         <p id="turn">Turn: White</p>
         <p id="pieceText">Select piece to move:</p>
         <select id="pieceSelect" onchange="moveDropDown()">
         </select>
-        <p id="moveText">Select square to move to</p>
+        <p id="moveText">Select square to move to:</p>
         <select id="moveSelect"></select>
         <p id="promotionText" hidden>Select a piece to promote to</p>
         <select id="promotionSelect" hidden>

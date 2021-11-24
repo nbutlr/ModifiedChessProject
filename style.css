@@ -8,7 +8,6 @@
     height: 50px;
     font-size: 30px;
     text-align: center;
-    font-weight: bold;
     border: 1px solid black;
 }
 .boardLabel{
@@ -23,27 +22,18 @@
     flex-wrap: wrap;
     width: calc(9*50px);
 }
-.boardSpan:nth-child(20n+3){
+.boardSpanBlue:nth-child(2n){
     background-color: #1E6EC7;
 }
-.boardSpan:nth-child(20n+5){
-    background-color: #1E6EC7;
+.boardSpanRed:nth-child(2n){
+    background-color: #df4747;
 }
-.boardSpan:nth-child(20n+7){
-    background-color: #1E6EC7;
+.boardSpanGreen:nth-child(2n){
+    background-color: #40df4d;
 }
-.boardSpan:nth-child(20n+9){
-    background-color: #1E6EC7;
+.boardSpanGrey:nth-child(2n){
+    background-color: #888888;
 }
-.boardSpan:nth-child(20n+12){
-    background-color: #1E6EC7;
-}
-.boardSpan:nth-child(20n+14){
-    background-color: #1E6EC7;
-}
-.boardSpan:nth-child(20n+16){
-    background-color: #1E6EC7;
-}
-.boardSpan:nth-child(20n+18){
-    background-color: #1E6EC7;
+.boardSpanPurple:nth-child(2n){
+    background-color: #c32dd1;
 }
