@@ -852,11 +852,36 @@ function clickBoard(clickedSquare) {
 }
 
 function checkmate() {
-    for (l=0;l<document.getElementById("pieceSelect").options.length;l++) {
-        document.getElementById("pieceSelect").selectedIndex = l;
-        moveDropDown();
-        if (document.getElementById("moveSelect").options.length != 0) {
-            return;
+    let pieceTotal = 0;
+    let flagMaterial = false;
+    for (m=0;m<pieces.length;m++) {
+        if(pieces[m] != "") {
+            pieceTotal++;
+        }
+    }
+    // The only way there can be only 2 pieces left without the game ending is if there is 2 kings
+    if (pieceTotal == 2) {
+        flagMaterial = true;
+        document.getElementById("checkmate").innerHTML = "Draw by insufficient material";
+    } else if (pieceTotal == 3) {
+        for (m=0;m<pieces.length;m++) {
+            if (pieces[m] != "") {
+                pieceAtSquare = document.getElementById(pieces[m].square).innerHTML.charCodeAt();
+                // If there's 3 pieces there has to be 2 kings left, and a knight or bishop and a king cannot checkmate the other king.
+                if (pieceAtSquare == 9816 || pieceAtSquare == 9815 || pieceAtSquare == 9821 || pieceAtSquare == 9822) {
+                    flagMaterial = true;
+                    document.getElementById("checkmate").innerHTML = "Draw by insufficient material";
+                }
+            }
+        }
+    }
+    if (!flagMaterial) {
+        for (l=0;l<document.getElementById("pieceSelect").options.length;l++) {
+            document.getElementById("pieceSelect").selectedIndex = l;
+            moveDropDown();
+            if (document.getElementById("moveSelect").options.length != 0) {
+                return;
+            }
         }
     }
     document.getElementById("pieceText").hidden = true;
@@ -866,12 +891,14 @@ function checkmate() {
     document.getElementById("submit").hidden = true;
     document.getElementById("checkmate").hidden = false;
     checks = inCheck();
-    if (checks.length == 0) {
-        document.getElementById("checkmate").innerHTML = "Stalemate: it's a draw."
-    } else if (turn % 2 == 0) {
-        document.getElementById("checkmate").innerHTML = "Black wins by checkmate!";
-    } else {
-        document.getElementById("checkmate").innerHTML = "White wins by checkmate!";
+    if (!flagMaterial) {
+        if (checks.length == 0) {
+            document.getElementById("checkmate").innerHTML = "Stalemate: it's a draw.";
+        } else if (turn % 2 == 0) {
+            document.getElementById("checkmate").innerHTML = "Black wins by checkmate!";
+        } else {
+            document.getElementById("checkmate").innerHTML = "White wins by checkmate!";
+        }
     }
 }
 
