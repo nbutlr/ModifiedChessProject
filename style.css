@@ -40,3 +40,6 @@
 .boardSpanBrown:nth-child(2n){
     background-color: #611d02;
 }
+.boardSpanYellow:nth-child(2n){
+    background-color: #FFC807;
+}

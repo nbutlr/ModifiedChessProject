@@ -906,7 +906,7 @@ function updateColour() {
     colour = document.getElementById("colourSelect").options[document.getElementById("colourSelect").selectedIndex].text;
     elements = document.querySelectorAll('.boardSpan');
     for(i=0;i<elements.length;i++) {
-        elements[i].classList.remove('boardSpanBlue', 'boardSpanRed', 'boardSpanGreen', 'boardSpanGrey', 'boardSpanPurple', 'boardSpanBrown');
+        elements[i].classList.remove('boardSpanBlue', 'boardSpanRed', 'boardSpanGreen', 'boardSpanGrey', 'boardSpanPurple', 'boardSpanBrown', 'boardSpanYellow');
         if(colour == "Blue") {
             elements[i].classList.add('boardSpanBlue');
         } else if (colour == "Red") {
@@ -919,9 +919,27 @@ function updateColour() {
             elements[i].classList.add('boardSpanPurple');
         } else if (colour == "Brown") {
             elements[i].classList.add('boardSpanBrown');
+        } else if (colour == "Yellow") {
+            elements[i].classList.add('boardSpanYellow');
         }
     }
 }
+
+// function elephantify() {
+//     for(i=0;i<pieces.length;i++) {
+//         document.getElementById(pieces[i].square).innerHTML = "&#128024;";
+//     }
+// }
+
+// function queenify() {
+//     for(i=0;i<pieces.length;i++) {
+//         if(pieces[i].colour == "white") {
+//             document.getElementById(pieces[i].square).innerHTML = "&#9813;";
+//         } else {
+//             document.getElementById(pieces[i].square).innerHTML = "&#9819;";
+//         }
+//     }
+// }
 
 initialiseBoard();
 let colours = ["white","black"];
