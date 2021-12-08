@@ -1,7 +1,8 @@
 /* This is my main javascript file where the Modified Chess game will be handled and run
 Created by Nathan Butler starting 14/06/21 for my A-level Computer Science project */
 
-class Pawn { 
+class Pawn {
+    // Creates the pawn object and displays it on the board
     constructor(square, colour, moved) {
         this.square = square;
         this.moved = moved;
@@ -13,23 +14,22 @@ class Pawn {
             document.getElementById(square).innerHTML = "&#9823;";
         }
     }
-
-    getSquare() {
-        return this.square;
-    }
     
+    //Checks and returns all the legal moves that the pawn can make
     checkLegalMoves() {
         let legal=[];
         if (this.colour=="white") {
+            //Is the pawn allowed to move 2 spaces if it hasn't moved yet
             if (this.moved==false && document.getElementById(this.square[0]+(parseInt(this.square[1])+1).toString()).innerHTML == "" && document.getElementById(this.square[0]+(parseInt(this.square[1])+2).toString()).innerHTML == "" ){
                 legal.push(this.square[0]+(parseInt(this.square[1])+2).toString());
             }
+            //Can the pawn move forwards 1 square
             try {
                 if(document.getElementById(this.square[0]+(parseInt(this.square[1])+1).toString()).innerHTML == "") {
                     legal.push(this.square[0]+(parseInt(this.square[1])+1).toString());
                 }
             } catch (error) {
-            }
+            } //Can the pawn take a piece diagonally top right from it
             try {
                 if(document.getElementById(String.fromCharCode(this.square[0].charCodeAt()-1)+(parseInt(this.square[1])+1).toString()).innerHTML != "") {
                     if (pieces[pieces.map(function(e) { return e.square; }).indexOf(String.fromCharCode(this.square[0].charCodeAt()-1)+(parseInt(this.square[1])+1).toString())].colour!=this.colour) {
@@ -39,7 +39,8 @@ class Pawn {
                     legal.push(String.fromCharCode(this.square[0].charCodeAt()-1)+(parseInt(this.square[1])+1).toString());
                 }
             } catch (error) {
-            } try {
+            } //Can the pawn take a piece diagonally top left from it
+            try {
                 if(document.getElementById(String.fromCharCode(this.square[0].charCodeAt()+1)+(parseInt(this.square[1])+1).toString()).innerHTML != "") {
                     if (pieces[pieces.map(function(e) { return e.square; }).indexOf(String.fromCharCode(this.square[0].charCodeAt()+1)+(parseInt(this.square[1])+1).toString())].colour!=this.colour) {
                         legal.push(String.fromCharCode(this.square[0].charCodeAt()+1)+(parseInt(this.square[1])+1).toString());
@@ -49,6 +50,7 @@ class Pawn {
                 }
             } catch (error) {
             }
+        //Else if the pawn is black, it is the same as above just bottom right / left instead.
         } else {
             if (this.moved==false && document.getElementById(this.square[0]+(parseInt(this.square[1])-1).toString()).innerHTML == "" && document.getElementById(this.square[0]+(parseInt(this.square[1])-2).toString()).innerHTML == "" ){
                 legal.push(this.square[0]+(parseInt(this.square[1])-2).toString());
@@ -92,11 +94,6 @@ class Pawn {
             document.getElementById(square).innerHTML = "&#9823;";
         }
     }
-
-    destroy() {
-        this.onBoard = false;
-        pieces[pieces.map(function(e) { return e.square; }).indexOf(this.square)]="";
-    }
 }
 
 class Knight {
@@ -113,12 +110,15 @@ class Knight {
 
     checkLegalMoves() {
         let legal = [];
+        // All the legal moves of a knight in a coordinate system
         let moves = [[-2,-1,1,2,2,1,-1,-2],[1,2,2,1,-1,-2,-2,-1]];
+        // For every move in the array, check whether the square is on the board
         for(i=0;i<8;i++) {
             try {
+                // And if the square is empty
                 if(document.getElementById(String.fromCharCode(this.square[0].charCodeAt()+moves[0][i])+(parseInt(this.square[1])+moves[1][i]).toString()).innerHTML == "") {
                     legal.push(String.fromCharCode(this.square[0].charCodeAt()+moves[0][i])+(parseInt(this.square[1])+moves[1][i]).toString())
-                } else {
+                } else { //Or if the square is taken by an opponent's piece
                     if (pieces[pieces.map(function(e) { return e.square; }).indexOf(String.fromCharCode(this.square[0].charCodeAt()+moves[0][i])+(parseInt(this.square[1])+moves[1][i]).toString())].colour!=this.colour) {
                         legal.push(String.fromCharCode(this.square[0].charCodeAt()+moves[0][i])+(parseInt(this.square[1])+moves[1][i]).toString())
                     }
@@ -127,14 +127,6 @@ class Knight {
             }
         }
         return legal;
-    }
-
-    getSquare() {
-        return this.square;
-    }
-
-    destroy() {
-        this.onBoard = false;
     }
 }
 
@@ -150,18 +142,11 @@ class Bishop {
         }
     }
 
+    //Calls the checkDiagonal function to see what the Bishop's legal moves are
     checkLegalMoves() {
         let legal = [];
         legal = checkDiagonal(this.square, this.colour);
         return legal;
-    }
-
-    getSquare() {
-        return this.square;
-    }
-
-    destroy() {
-        this.onBoard = false;
     }
 }
 
@@ -177,6 +162,7 @@ class Rook {
             document.getElementById(square).innerHTML = "&#9820;";
         }
     }
+    // Checks the vertical and horizontal moves that the rook can make
     checkLegalMoves() {
         let legal = [];
         legal = checkPerpendicular(this.square, this.colour);
@@ -195,6 +181,7 @@ class Queen {
             document.getElementById(square).innerHTML = "&#9819;";
         }
     }
+    // Combines the diagonal moves with the vertical and horizontal moves of the queen
     checkLegalMoves() {
         let legal = [];
         legal = checkPerpendicular(this.square, this.colour);
@@ -219,6 +206,7 @@ class King {
     checkLegalMoves() {
         let legal = [];
         let moves = [[-1,-1,-1,0,1,1,1,0],[-1,0,1,1,1,0,-1,-1]];
+        // Checks if the king can move to the 8 squares around it
         for(i=0;i<8;i++) {
             try {
                 if(document.getElementById(String.fromCharCode(this.square[0].charCodeAt()+moves[0][i])+(parseInt(this.square[1])+moves[1][i]).toString()).innerHTML == "") {
@@ -234,7 +222,9 @@ class King {
         // Checking if castling is legal - king does not move through check //
         if(this.moved == false) {
             if(this.square[1]=="1") {
+                // Queen's side castling
                 if(document.getElementById("A1").innerHTML.charCodeAt() == 9814 && pieces[pieces.map(function(e) { return e.square; }).indexOf("A1")].moved == false) {
+                    // Moves the king to each square to test if there are any checks on said square, then resets it afterwards
                     if(document.getElementById("B1").innerHTML=="" && document.getElementById("C1").innerHTML == "" && document.getElementById("D1").innerHTML == "") {
                         pieces[pieces.map(function(e) { return e.square; }).indexOf("E1")].square="D1";
                         document.getElementById("D1").innerHTML=document.getElementById("E1").innerHTML;
@@ -247,11 +237,13 @@ class King {
                         pieces[pieces.map(function(e) { return e.square; }).indexOf("C1")].square="E1";
                         document.getElementById("E1").innerHTML=document.getElementById("C1").innerHTML;
                         document.getElementById("C1").innerHTML="";
+                        // If there are no checks on any of the squares, the move is legal
                         if (checks.length==0) {
                             legal.push("C1");
                         }
                     }
                 }
+                // King's side castling
                 if(document.getElementById("H1").innerHTML.charCodeAt() == 9814 && pieces[pieces.map(function(e) { return e.square; }).indexOf("H1")].moved == false) {
                     if(document.getElementById("F1").innerHTML=="" && document.getElementById("G1").innerHTML == "") {
                         pieces[pieces.map(function(e) { return e.square; }).indexOf("E1")].square="F1";
@@ -270,6 +262,7 @@ class King {
                         }
                     }
                 }
+            // The exact same just testing for the Black king instead of the White king.
             } else if (this.square[1]=="8") {
                 if(document.getElementById("A8").innerHTML.charCodeAt() == 9820 && pieces[pieces.map(function(e) { return e.square; }).indexOf("A8")].moved == false) {
                     if(document.getElementById("B8").innerHTML=="" && document.getElementById("C8").innerHTML == "" && document.getElementById("D8").innerHTML == "") {
@@ -313,10 +306,7 @@ class King {
     }
 }
 
-function convertSquare(square) {
-    return [square[0], parseInt(square.slice(1))];
-}
-
+// Sets up the board in HTML with all of the span tags and their ids and onclicks. Also sets up the labels at the end of each rank and file.
 function initialiseBoard() {
     document.getElementById("board").innerHTML = "";
     for (i=8;i>0;i--) {
@@ -334,6 +324,7 @@ function initialiseBoard() {
     document.getElementById("board").innerHTML += "</div>";
 }
 
+// Sets up all the pawns for White and Black on their respective ranks
 function initialisePawns() {
     for (i=1;i<9;i++) {
         pieces.push(new Pawn(String.fromCharCode(i+64)+"2", "white", false));
@@ -343,8 +334,11 @@ function initialisePawns() {
     }
 }
 
+// Sets up all the pieces on all their respective ranks
 function initialisePieces() {
     for (i=1;i<3;i++) {
+        /* If it is White, i = 1, so the pieces are put on the 1^^3 = 1st rank and colours[0] is White
+           If it is Black, i = 2, so the pieces are put on the 2^^3 = 8th rank and colours[1] is Black */
         rank = Math.pow(i,3).toString();
         pieces.push(new Rook("A"+rank, colours[i-1]));
         pieces.push(new Knight("B"+rank, colours[i-1]));
@@ -357,6 +351,7 @@ function initialisePieces() {
     }
 }
 
+//Sets up the piece select drop down menu for every piece in the array, and displays them only when it is White's turn or Black's turn respectively
 function dropDown() {
     options = "";
     for (i=0;i<pieces.length;i++) {
@@ -369,8 +364,10 @@ function dropDown() {
     document.getElementById("pieceSelect").innerHTML = options;
 }
 
+// Checking what moves are legal to make diagonally
 function checkDiagonal(testSquare, pieceColour) {
     let legal=[];
+    // Checks bottom left diagonal
     i=1;
     while (testSquare[0].charCodeAt(0)-64-i > 0 && testSquare[1]-i > 0) {
         try {
@@ -387,6 +384,7 @@ function checkDiagonal(testSquare, pieceColour) {
         }
         i++;
     }
+    // Checking top left diagonal
     i=1;
     while (testSquare[0].charCodeAt(0)-64-i > 0 && parseInt(testSquare[1])+i < 9) {
         try {
@@ -403,6 +401,7 @@ function checkDiagonal(testSquare, pieceColour) {
         }
         i++;
     }
+    // Checking top right diagonal
     i=1;
     while (testSquare[0].charCodeAt(0)-64+i < 9 && parseInt(testSquare[1])+i < 9) {
         try {
@@ -419,6 +418,7 @@ function checkDiagonal(testSquare, pieceColour) {
         }
         i++;
     }
+    // Checking bottom right diagonal
     i=1;
     while (testSquare[0].charCodeAt(0)-64+i < 9 && parseInt(testSquare[1])-i > 0) {
         try {
@@ -438,8 +438,10 @@ function checkDiagonal(testSquare, pieceColour) {
     return legal;
 }
 
+// Checking what moves are legal to make horizontally and vertically
 function checkPerpendicular(testSquare, pieceColour) {
     let legal=[];
+    // Checking left
     i=1;
     while (testSquare[0].charCodeAt(0)-64-i > 0) {
         try {
@@ -456,6 +458,7 @@ function checkPerpendicular(testSquare, pieceColour) {
         }
         i++;
     }
+    // Checking right
     i=1;
     while (testSquare[0].charCodeAt(0)-64+i < 9) {
         try {
@@ -472,6 +475,7 @@ function checkPerpendicular(testSquare, pieceColour) {
         }
         i++;
     }
+    // Checking down
     i=1;
     while (parseInt(testSquare[1])-i > 0) {
         try {
@@ -488,6 +492,7 @@ function checkPerpendicular(testSquare, pieceColour) {
         }
         i++;
     }
+    // Checking up
     i=1;
     while (parseInt(testSquare[1])+i < 9) {
         try {
@@ -507,18 +512,24 @@ function checkPerpendicular(testSquare, pieceColour) {
     return legal;
 }
 
+// The menu for displaying the legal moves a piece can make - this is an onChange as soon as the piece menu is changed
 function moveDropDown() {
     let options="";
     let pieceLocation;
     let selected = document.getElementById("pieceSelect").options[document.getElementById("pieceSelect").selectedIndex].text;
     let legalDropDown = [];
+    // Returns the legal moves of the piece that has been selected in the piece menu
     legalDropDown = pieces[pieces.map(function(e) { return e.square; }).indexOf(selected)].checkLegalMoves();
+    // For every legal move, this checks that this move does not put you into check
     for (k=0;k<legalDropDown.length;k++) {
         oldPiece = true
+        // If the destination square is empty, move the piece there.
         if(document.getElementById(legalDropDown[k]).innerHTML=="") {
             oldPiece = false;
             document.getElementById(legalDropDown[k]).innerHTML=document.getElementById(selected).innerHTML;
             document.getElementById(selected).innerHTML="";
+        /* Else if it's White's turn (for it to be in legalDropDown, the piece has to be an opponent's piece)
+           Save the old piece in that square into a temporary variable, and replace the old piece with the piece being moved.*/
         } else if (turn % 2 == 0) {
             tempInnerHTML = document.getElementById(legalDropDown[k]).innerHTML;
             temp = pieces[pieces.map(function(e) { return e.square; }).indexOf(legalDropDown[k])];
@@ -526,6 +537,7 @@ function moveDropDown() {
             pieces[pieces.map(function(e) { return e.square; }).indexOf(legalDropDown[k])]="";
             document.getElementById(legalDropDown[k]).innerHTML=document.getElementById(selected).innerHTML;
             document.getElementById(selected).innerHTML="";
+        // Else if it's Black's turn, do the same as above but for Black instead of White.
         } else {
             tempInnerHTML = document.getElementById(legalDropDown[k]).innerHTML;
             temp = pieces[pieces.map(function(e) { return e.square; }).indexOf(legalDropDown[k])];
