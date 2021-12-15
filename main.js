@@ -316,12 +316,10 @@ function initialiseBoard() {
         }
         document.getElementById("board").innerHTML += "<span class='boardLabel'>"+i.toString()+"</span>";
     }
-    document.getElementById("board").innerHTML += "<div>";
     for (j=1;j<9;j++) {
         file = String.fromCharCode(j+64);
         document.getElementById("board").innerHTML += "<span class='boardLabel'>"+file+"</span>";
     }
-    document.getElementById("board").innerHTML += "</div>";
 }
 
 // Sets up all the pawns for White and Black on their respective ranks
